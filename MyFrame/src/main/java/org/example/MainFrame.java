@@ -45,6 +45,11 @@ public class MainFrame extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             System.out.println("search button");
+            contentPanel.setLayout(new BorderLayout());
+            contentPanel.add(new SearchPanel(connection), BorderLayout.CENTER);
+
+            contentPanel.repaint();
+            contentPanel.validate();
         }
     };
 
@@ -89,7 +94,7 @@ public class MainFrame extends JFrame {
         navPanel.add(searchBtn);
 
         // contentPanel
-        contentPanel.setBackground(Color.darkGray);
+//        contentPanel.setBackground(Color.darkGray);
 
         add(navPanel, BorderLayout.WEST);
         add(titlePanel, BorderLayout.NORTH);
