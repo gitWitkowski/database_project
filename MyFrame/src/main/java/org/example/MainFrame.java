@@ -2,6 +2,8 @@ package org.example;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.*;
 
 // main Frame of the App
@@ -19,8 +21,36 @@ public class MainFrame extends JFrame {
     private final JPanel navPanel = new JPanel();
     private final JPanel contentPanel = new JPanel();
 
+    // navPanel buttons
+    private JButton loginBtn = new JButton("ZALOGUJ");
+    private JButton registerBtn = new JButton("ZAREJESTRUJ");
+    private JButton searchBtn = new JButton("SZUKAJ");
+
+    // event handlers for buttons
+    ActionListener loginBtnListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.out.println("login button");
+        }
+    };
+
+    ActionListener registerBtnListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.out.println("register button");
+        }
+    };
+
+    ActionListener searchBtnListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.out.println("search button");
+        }
+    };
+
     MainFrame(){
         initGUI();
+        setUpActionListeners();
     }
 
     // connect to database
@@ -43,6 +73,7 @@ public class MainFrame extends JFrame {
         setSize(new Dimension(800, 600));
         setLayout(new BorderLayout());
 
+        // titlePanel
         titlePanel.setBackground(Color.black);
         titlePanel.setPreferredSize(new Dimension(70,70));
         titlePanel.setLayout(new GridLayout(1,1));
@@ -50,9 +81,14 @@ public class MainFrame extends JFrame {
         titleText.setForeground(Color.white);
         titlePanel.add(titleText);
 
+        // navPanel
         navPanel.setBackground(Color.gray);
         navPanel.setPreferredSize(new Dimension(150,150));
+        navPanel.add(loginBtn);
+        navPanel.add(registerBtn);
+        navPanel.add(searchBtn);
 
+        // contentPanel
         contentPanel.setBackground(Color.darkGray);
 
         add(navPanel, BorderLayout.WEST);
@@ -60,5 +96,11 @@ public class MainFrame extends JFrame {
         add(contentPanel);
 
         setVisible(true);
+    }
+
+    private void setUpActionListeners(){
+        loginBtn.addActionListener(loginBtnListener);
+        registerBtn.addActionListener(registerBtnListener);
+        searchBtn.addActionListener(searchBtnListener);
     }
 }
