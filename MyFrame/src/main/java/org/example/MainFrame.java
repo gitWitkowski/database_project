@@ -9,12 +9,11 @@ import java.sql.*;
 // main Frame of the App
 public class MainFrame extends JFrame {
 
-    // variable for connection with database
-    private Connection connection = null;
+    // SQLHelper class responsible for interaction with database
+    private final SQLHelper sql;
 
-    {
-        getConnection();
-    }
+    // reference to itself
+    private final MainFrame that = this;
 
     // GUI is build with these 3 JPanels
     private final JPanel titlePanel = new JPanel();
@@ -46,7 +45,7 @@ public class MainFrame extends JFrame {
         public void actionPerformed(ActionEvent e) {
             System.out.println("search button");
             contentPanel.setLayout(new BorderLayout());
-            contentPanel.add(new SearchPanel(connection), BorderLayout.CENTER);
+            contentPanel.add(new SearchPanel(sql, that), BorderLayout.CENTER);
 
             contentPanel.repaint();
             contentPanel.validate();
@@ -54,21 +53,12 @@ public class MainFrame extends JFrame {
     };
 
     MainFrame(){
+        sql = new SQLHelper(
+                "jdbc:postgresql://trumpet.db.elephantsql.com/cipfxjrs",
+                "cipfxjrs",
+                "msppY-QYb7-1JgUShwzQspSx6KrlG_Ps");
         initGUI();
         setUpActionListeners();
-    }
-
-    // connect to database
-    private void getConnection(){
-        String dbaseURL = "jdbc:postgresql://trumpet.db.elephantsql.com/cipfxjrs";
-        String username  = "cipfxjrs";
-        String password  = "msppY-QYb7-1JgUShwzQspSx6KrlG_Ps";
-        try {
-            connection = DriverManager.getConnection(dbaseURL, username, password);
-            System.out.println("Successfully Connected to the database!");
-        } catch (SQLException e) {
-            System.out.println("Could not connect to the database " + e.getMessage());
-        }
     }
 
     // create starting GUI

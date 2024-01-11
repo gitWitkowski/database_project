@@ -1,47 +1,104 @@
 package org.example;
 
 import com.github.lgooddatepicker.components.DatePicker;
+import com.github.lgooddatepicker.components.DatePickerSettings;
+import com.github.lgooddatepicker.optionalusertools.DateChangeListener;
+import com.github.lgooddatepicker.optionalusertools.DateHighlightPolicy;
+import com.github.lgooddatepicker.optionalusertools.DateVetoPolicy;
+import com.github.lgooddatepicker.zinternaltools.DateChangeEvent;
+import com.github.lgooddatepicker.zinternaltools.HighlightInformation;
 
 import javax.swing.*;
 import java.awt.*;
-import java.sql.Connection;
+import java.time.LocalDate;
 
 // class representing search panel
 public class SearchPanel extends JPanel {
 
-    // connection established in MainFrame
-    private Connection connection;
+    // SQLHelper class responsible for interaction with database
+    private SQLHelper sql;
+    private MainFrame mainFrame;
 
     // label and combo box for cities
     private JLabel cityLabel = new JLabel("Miasto:");
-    private JComboBox cityList = new JComboBox();
+    private JComboBox<String> cityList;
 
     // label and date picker for start date
     private JLabel startDateLabel = new JLabel("Poczatek pobytu:");
-    private DatePicker startDate = new DatePicker();
+    private DatePickerSettings datePickerSettings = new DatePickerSettings();
+    private DatePicker startDate = new DatePicker(datePickerSettings);
 
     // label and date picker for end date
     private JLabel endDateLabel = new JLabel("Koniec pobytu:");
-    private DatePicker endDate = new DatePicker();
+    private DatePickerSettings datePickerSettings2 = new DatePickerSettings();
+    private DatePicker endDate = new DatePicker(datePickerSettings2);
 
     // label and combo box for room type
     private JLabel roomCatLabel = new JLabel("Rodzaj pokoju:");
-    private JComboBox roomCatList = new JComboBox();
+    private JComboBox<String> roomCatList;
 
     // label and spinner for number of guests
     private SpinnerNumberModel model = new SpinnerNumberModel(1, 1, 9.0, 1.0);
     private JLabel numOfGuestLabel = new JLabel("Ilosc gosci:");
     private JSpinner numOfGuestSpinner = new JSpinner(model);
 
+    /*
+    *  experimental
+    */
+    private DateChangeListener dtchng = new DateChangeListener() {
+        @Override
+        public void dateChanged(DateChangeEvent dateChangeEvent) {
+            updateVetoPolicy();
+        }
+    };
 
-    SearchPanel(Connection connection){
-        this.connection = connection;
+    /*
+     *  experimental
+     */
+    private void updateVetoPolicy(){
+        datePickerSettings2.setVetoPolicy(new DateVetoPolicy() {
+            LocalDate temp = startDate.getDate();
+            @Override
+            public boolean isDateAllowed(LocalDate localDate) {
+                if(temp==null) return true;
+                if(localDate.isBefore(temp.plusDays(1)))
+                    return false;
+                return true;
+            }
+        });
+    }
+
+    SearchPanel(SQLHelper sql, MainFrame mainFrame){
+        this.sql = sql;
+        this.mainFrame = mainFrame;
+        initGUI();
+    }
+
+    // init GUI for the search panel
+    private void initGUI(){
+        cityList = new JComboBox(sql.getCities());
+        roomCatList = new JComboBox(sql.getRoomCat());
+
         this.setLayout(new GridBagLayout());
 
         numOfGuestSpinner.setPreferredSize(new Dimension(50,30));
 
         // non-editable TextField in JSpinner
         ((JSpinner.DefaultEditor) numOfGuestSpinner.getEditor()).getTextField().setEditable(false);
+
+        /*
+         *  experimental
+         */
+        startDate.addDateChangeListener(dtchng);
+
+        datePickerSettings.setVetoPolicy(new DateVetoPolicy() {
+            @Override
+            public boolean isDateAllowed(LocalDate localDate) {
+                if(localDate.isBefore(LocalDate.now()))
+                    return false;
+                return true;
+            }
+        });
 
         // constraints for elements in grid
         GridBagConstraints gbc = new GridBagConstraints();
