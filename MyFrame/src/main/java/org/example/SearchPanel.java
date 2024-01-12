@@ -76,7 +76,7 @@ public class SearchPanel extends JPanel {
 
     // init GUI for the search panel
     private void initGUI(){
-        cityList = new JComboBox(sql.getCities());
+        cityList = new JComboBox(sql.getHotels());
         roomCatList = new JComboBox(sql.getRoomCat());
 
         this.setLayout(new GridBagLayout());

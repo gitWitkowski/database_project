@@ -23,7 +23,8 @@ public class SQLHelper {
         }
     }
 
-    protected Hotel[] getCities(){
+    // get table of hotel records
+    protected Hotel[] getHotels(){
         List<Hotel> table = new ArrayList<>();
         try {
             PreparedStatement pst = connection.prepareStatement("SELECT * FROM projekt.hotele", ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
@@ -32,7 +33,6 @@ public class SQLHelper {
                 Hotel temp = new Hotel(rs.getInt("hotel_id"),
                         rs.getString("nazwa"),rs.getString("miasto"),
                         rs.getString("adres"), rs.getDouble("srednia_ocena"));
-//                String miasto    = rs.getString("miasto") ;
                 table.add(temp);
             }
             rs.close();
@@ -42,6 +42,31 @@ public class SQLHelper {
         return  table.toArray(new Hotel[0]);
     }
 
+    // get table of rooms records
+    protected Room[] getRooms(int hotel_id){
+        List<Room> table = new ArrayList<>();
+        try {
+            PreparedStatement pst = connection.prepareStatement("SELECT * FROM projekt.pokoje p where hotel_id = ?", ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            pst.setInt(1, hotel_id);
+            ResultSet rs = pst.executeQuery();
+            while (rs.next())  {
+                Room temp = new Room(
+                        rs.getInt("pokoj_id"),
+                        rs.getInt("hotel_id"),
+                        rs.getInt("kategoria_id"),
+                        rs.getInt("max_gosci"),
+                        rs.getBoolean("obecnie_zajety")
+                );
+                table.add(temp);
+            }
+            rs.close();
+            pst.close();    }
+        catch(SQLException e)  {
+            System.out.println("Blad podczas przetwarzania danych:"+e) ;   }
+        return  table.toArray(new Room[0]);
+    }
+
+    // get table of room categories records
     protected RoomCat[] getRoomCat(){
         List<RoomCat> table = new ArrayList<>();
         try {
@@ -56,5 +81,22 @@ public class SQLHelper {
         catch(SQLException e)  {
             System.out.println("Blad podczas przetwarzania danych:"+e) ;   }
         return  table.toArray(new RoomCat[0]);
+    }
+
+    // get name of the category of the room with the given id
+    protected String getRoomCatName(int room_id){
+        String temp = "";
+        try {
+            PreparedStatement pst = connection.prepareStatement("SELECT nazwa_kategorii nk FROM projekt.pokoje p join projekt.kategorie_pokoi kp using(kategoria_id) where p.pokoj_id = ?", ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            pst.setInt(1,room_id);
+            ResultSet rs = pst.executeQuery();
+            while (rs.next())  {
+                temp = rs.getString("nk");
+            }
+            rs.close();
+            pst.close();    }
+        catch(SQLException e)  {
+            System.out.println("Blad podczas przetwarzania danych:"+e) ;   }
+        return  temp;
     }
 }

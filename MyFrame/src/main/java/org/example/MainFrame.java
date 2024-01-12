@@ -18,7 +18,7 @@ public class MainFrame extends JFrame {
     // GUI is build with these 3 JPanels
     private final JPanel titlePanel = new JPanel();
     private final JPanel navPanel = new JPanel();
-    private final JPanel contentPanel = new JPanel();
+    protected final JPanel contentPanel = new JPanel();
 
     // navPanel buttons
     private JButton loginBtn = new JButton("LOGOWANIE");
@@ -55,10 +55,11 @@ public class MainFrame extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             System.out.println("offers button");
+            changePanel(new HotelsPanel(sql, that));
         }
     };
 
-    private void changePanel(JPanel panel){
+    protected void changePanel(JPanel panel){
         contentPanel.removeAll();
         contentPanel.add(panel, BorderLayout.CENTER);
         contentPanel.repaint();
