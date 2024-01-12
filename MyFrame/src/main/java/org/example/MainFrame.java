@@ -21,26 +21,27 @@ public class MainFrame extends JFrame {
     private final JPanel contentPanel = new JPanel();
 
     // navPanel buttons
-    private JButton loginBtn = new JButton("ZALOGUJ");
-    private JButton registerBtn = new JButton("ZAREJESTRUJ");
-    private JButton searchBtn = new JButton("SZUKAJ");
+    private JButton loginBtn = new JButton("LOGOWANIE");
+    private JButton registerBtn = new JButton("REJESTRACJA");
+    private JButton searchBtn = new JButton("ZAREZERWUJ TERMIN");
+    private JButton viewBtn = new JButton("PRZEGLADAJ OFERTY");
 
     // event handlers for buttons
-    ActionListener loginBtnListener = new ActionListener() {
+    private ActionListener loginBtnListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
             System.out.println("login button");
         }
     };
 
-    ActionListener registerBtnListener = new ActionListener() {
+    private ActionListener registerBtnListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
             System.out.println("register button");
         }
     };
 
-    ActionListener searchBtnListener = new ActionListener() {
+    private ActionListener searchBtnListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
             System.out.println("search button");
@@ -49,6 +50,13 @@ public class MainFrame extends JFrame {
 
             contentPanel.repaint();
             contentPanel.validate();
+        }
+    };
+
+    private ActionListener viewBtnListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.out.println("offers button");
         }
     };
 
@@ -78,10 +86,11 @@ public class MainFrame extends JFrame {
 
         // navPanel
         navPanel.setBackground(Color.gray);
-        navPanel.setPreferredSize(new Dimension(150,150));
+        navPanel.setPreferredSize(new Dimension(200,150));
         navPanel.add(loginBtn);
         navPanel.add(registerBtn);
         navPanel.add(searchBtn);
+        navPanel.add(viewBtn);
 
         // contentPanel
 //        contentPanel.setBackground(Color.darkGray);
@@ -97,5 +106,6 @@ public class MainFrame extends JFrame {
         loginBtn.addActionListener(loginBtnListener);
         registerBtn.addActionListener(registerBtnListener);
         searchBtn.addActionListener(searchBtnListener);
+        viewBtn.addActionListener(viewBtnListener);
     }
 }

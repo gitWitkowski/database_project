@@ -23,35 +23,38 @@ public class SQLHelper {
         }
     }
 
-    protected String[] getCities(){
-        List<String> table = new ArrayList<>();
+    protected Hotel[] getCities(){
+        List<Hotel> table = new ArrayList<>();
         try {
-            PreparedStatement pst = connection.prepareStatement("SELECT miasto FROM projekt.hotele", ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            PreparedStatement pst = connection.prepareStatement("SELECT * FROM projekt.hotele", ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = pst.executeQuery();
             while (rs.next())  {
-                String miasto    = rs.getString("miasto") ;
-                table.add(miasto);
+                Hotel temp = new Hotel(rs.getInt("hotel_id"),
+                        rs.getString("nazwa"),rs.getString("miasto"),
+                        rs.getString("adres"), rs.getDouble("srednia_ocena"));
+//                String miasto    = rs.getString("miasto") ;
+                table.add(temp);
             }
             rs.close();
             pst.close();    }
         catch(SQLException e)  {
             System.out.println("Blad podczas przetwarzania danych:"+e) ;   }
-        return  table.toArray(new String[0]);
+        return  table.toArray(new Hotel[0]);
     }
 
-    protected String[] getRoomCat(){
-        List<String> table = new ArrayList<>();
+    protected RoomCat[] getRoomCat(){
+        List<RoomCat> table = new ArrayList<>();
         try {
-            PreparedStatement pst = connection.prepareStatement("SELECT nazwa_kategorii FROM projekt.kategorie_pokoi", ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            PreparedStatement pst = connection.prepareStatement("SELECT * FROM projekt.kategorie_pokoi", ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = pst.executeQuery();
             while (rs.next())  {
-                String kategoria = rs.getString("nazwa_kategorii") ;
-                table.add(kategoria);
+                RoomCat temp = new RoomCat(rs.getInt("kategoria_id"),rs.getString("nazwa_kategorii"),rs.getDouble("podstawa_cenowa"));
+                table.add(temp);
             }
             rs.close();
             pst.close();    }
         catch(SQLException e)  {
             System.out.println("Blad podczas przetwarzania danych:"+e) ;   }
-        return  table.toArray(new String[0]);
+        return  table.toArray(new RoomCat[0]);
     }
 }
