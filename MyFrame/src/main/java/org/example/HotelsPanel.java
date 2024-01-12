@@ -39,15 +39,15 @@ public class HotelsPanel extends JPanel {
             this.hotelName = new JLabel(hotel.name());
             this.city = new JLabel(hotel.city());
             this.rating = new JLabel(""+hotel.rating());
-            this.initGUI();
+            this.initCellGUI();
         }
 
         // create single cell
-        void initGUI(){
+        void initCellGUI(){
             this.add(hotelName);
             this.add(city);
             this.add(rating);
-            this.setBackground(Color.PINK);
+            this.setBackground(Color.decode("#417680"));
             this.setBorder(BorderFactory.createLineBorder(Color.black));
             this.addMouseListener(this);
         }
@@ -62,9 +62,13 @@ public class HotelsPanel extends JPanel {
         @Override
         public void mouseReleased(MouseEvent e) {}
         @Override
-        public void mouseEntered(MouseEvent e) {}
+        public void mouseEntered(MouseEvent e) {
+            this.setBackground(Color.decode("#2E8695"));
+        }
         @Override
-        public void mouseExited(MouseEvent e) {}
+        public void mouseExited(MouseEvent e) {
+            this.setBackground(Color.decode("#417680"));
+        }
     }
 
     // create GUI
@@ -76,10 +80,11 @@ public class HotelsPanel extends JPanel {
         Hotel[] tab = sql.getHotels();
         for (Hotel hotel : tab) {
             HotelCell cell = new HotelCell(hotel);
-            cell.setPreferredSize(new Dimension(100, 100));
+            cell.setPreferredSize(new Dimension(100, 200));
             contentPanel.add(cell);
         }
 
+        scrollPane.getVerticalScrollBar().setUnitIncrement(15);
         this.add(scrollPane, BorderLayout.CENTER);
     }
 }

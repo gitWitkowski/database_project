@@ -17,8 +17,8 @@ public class RoomsPanel extends JPanel {
     private int hotel_id;
 
     // JPanel inside of JScrollPane
-    private JScrollPane scrollPane;
     private JPanel contentPanel = new JPanel();
+    private JScrollPane scrollPane = new JScrollPane(contentPanel);
 
     RoomsPanel(SQLHelper sql, MainFrame mainFrame, int id){
         this.sql = sql;
@@ -41,13 +41,14 @@ public class RoomsPanel extends JPanel {
         RoomCell(Room room) {
             this.room = room;
             this.roomCat = new JLabel(sql.getRoomCatName(room.room_id()));
-            this.initGUI();
+            this.initCellGUI();
         }
 
         // create single cell
-        void initGUI(){
+        void initCellGUI(){
             this.add(this.roomCat);
             this.setBackground(Color.blue);
+            this.setBackground(Color.decode("#417680"));
             this.setBorder(BorderFactory.createLineBorder(Color.black));
             this.addMouseListener(this);
         }
@@ -61,9 +62,13 @@ public class RoomsPanel extends JPanel {
         @Override
         public void mouseReleased(MouseEvent e) {}
         @Override
-        public void mouseEntered(MouseEvent e) {}
+        public void mouseEntered(MouseEvent e) {
+            this.setBackground(Color.decode("#2E8695"));
+        }
         @Override
-        public void mouseExited(MouseEvent e) {}
+        public void mouseExited(MouseEvent e) {
+            this.setBackground(Color.decode("#417680"));
+        }
     }
 
     // create GUI
@@ -75,11 +80,11 @@ public class RoomsPanel extends JPanel {
         Room[] tab = sql.getRooms(hotel_id);
         for (Room room : tab) {
             RoomCell cell = new RoomCell(room);
-            cell.setPreferredSize(new Dimension(100, 100));
+            cell.setPreferredSize(new Dimension(100, 200));
             contentPanel.add(cell);
         }
 
-        scrollPane = new JScrollPane(contentPanel);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(15);
         this.add(scrollPane, BorderLayout.CENTER);
     }
 }
