@@ -31,6 +31,7 @@ public class MainFrame extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             System.out.println("login button");
+            changePanel(new LoginPanel(sql, that));
         }
     };
 
@@ -38,6 +39,7 @@ public class MainFrame extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             System.out.println("register button");
+            changePanel(new RegisterPanel(sql, that));
         }
     };
 
@@ -45,11 +47,7 @@ public class MainFrame extends JFrame {
         @Override
         public void actionPerformed(ActionEvent e) {
             System.out.println("search button");
-            contentPanel.setLayout(new BorderLayout());
-            contentPanel.add(new SearchPanel(sql, that), BorderLayout.CENTER);
-
-            contentPanel.repaint();
-            contentPanel.validate();
+            changePanel(new SearchPanel(sql, that));
         }
     };
 
@@ -59,6 +57,13 @@ public class MainFrame extends JFrame {
             System.out.println("offers button");
         }
     };
+
+    private void changePanel(JPanel panel){
+        contentPanel.removeAll();
+        contentPanel.add(panel, BorderLayout.CENTER);
+        contentPanel.repaint();
+        contentPanel.validate();
+    }
 
     MainFrame(){
         sql = new SQLHelper(
@@ -93,7 +98,7 @@ public class MainFrame extends JFrame {
         navPanel.add(viewBtn);
 
         // contentPanel
-//        contentPanel.setBackground(Color.darkGray);
+        contentPanel.setLayout(new BorderLayout());
 
         add(navPanel, BorderLayout.WEST);
         add(titlePanel, BorderLayout.NORTH);
