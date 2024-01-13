@@ -13,18 +13,22 @@ public class RoomsPanel extends JPanel {
     // reference to MainFrame
     private MainFrame mainFrame;
 
-    // id of the given hotel
-    private int hotel_id;
-
     // JPanel inside of JScrollPane
     private JPanel contentPanel = new JPanel();
     private JScrollPane scrollPane = new JScrollPane(contentPanel);
 
+    // constructor when displaying all the rooms in a certain hotel
     RoomsPanel(SQLHelper sql, MainFrame mainFrame, int id){
         this.sql = sql;
         this.mainFrame = mainFrame;
-        this.hotel_id = id;
-        initGUI();
+        initGUI(sql.getRooms(id));
+    }
+
+    // constructor when displaying only available rooms
+    RoomsPanel(SQLHelper sql, MainFrame mainFrame, Room[] tab){
+        this.sql = sql;
+        this.mainFrame = mainFrame;
+        initGUI(tab);
     }
 
     // inner class representing single hotel cell on the displayed list
@@ -72,13 +76,12 @@ public class RoomsPanel extends JPanel {
     }
 
     // create GUI
-    private void initGUI(){
+    private void initGUI(Room[] table){
         this.setLayout(new BorderLayout());
         contentPanel.setLayout(new BoxLayout(contentPanel,BoxLayout.Y_AXIS));
 
         // create cells for all rooms from given hotel
-        Room[] tab = sql.getRooms(hotel_id);
-        for (Room room : tab) {
+        for (Room room : table) {
             RoomCell cell = new RoomCell(room);
             cell.setPreferredSize(new Dimension(100, 200));
             contentPanel.add(cell);

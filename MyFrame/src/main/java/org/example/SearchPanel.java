@@ -10,6 +10,8 @@ import com.github.lgooddatepicker.zinternaltools.HighlightInformation;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.time.LocalDate;
 
 // class representing search panel
@@ -35,12 +37,41 @@ public class SearchPanel extends JPanel {
 
     // label and combo box for room type
     private JLabel roomCatLabel = new JLabel("Rodzaj pokoju:");
-    private JComboBox<String> roomCatList;
+    private JComboBox<RoomCat> roomCatList;
 
     // label and spinner for number of guests
     private SpinnerNumberModel model = new SpinnerNumberModel(1, 1, 9.0, 1.0);
     private JLabel numOfGuestLabel = new JLabel("Ilosc gosci:");
     private JSpinner numOfGuestSpinner = new JSpinner(model);
+
+    // button for searching offers
+    private JButton btnSearch = new JButton("Szukaj ofert");
+
+    // action listener for btnSearch
+    private ActionListener btnSearchListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            start = startDate.getDate();
+            end = endDate.getDate();
+            city = String.valueOf(cityList.getSelectedItem());
+            cat_id = ((RoomCat)roomCatList.getSelectedItem()).id();
+            numOfPeople = ((Double)numOfGuestSpinner.getValue()).intValue();
+//            System.out.println(start);
+//            System.out.println(end);
+//            System.out.println(city);
+//            System.out.println(cat_id);
+//            System.out.println(numOfPeople);
+            Room[] temp = sql.getFreeRooms(1, start, end,1,3 );
+            mainFrame.changePanel(new RoomsPanel(sql, mainFrame, temp));
+        }
+    };
+
+    // variables storing searching details
+    private LocalDate start = null;
+    private LocalDate end = null;
+    private String city = "";
+    private int cat_id;
+    private  int numOfPeople;
 
     /*
     *  experimental
@@ -102,7 +133,7 @@ public class SearchPanel extends JPanel {
 
         // constraints for elements in grid
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(30,30,20,20);
+        gbc.insets = new Insets(10,10,10,10);
 
         // elements and their position on grid
         gbc.gridx = 0;
@@ -154,5 +185,12 @@ public class SearchPanel extends JPanel {
         gbc.gridy = 4;
 
         this.add(numOfGuestSpinner, gbc);
+
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+
+        this.add(btnSearch, gbc);
+
+        btnSearch.addActionListener(btnSearchListener);
     }
 }
