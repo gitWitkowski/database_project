@@ -68,20 +68,20 @@ public class SQLHelper {
     }
 
     // get table of room categories records
-    protected RoomCat[] getRoomCat(){
-        List<RoomCat> table = new ArrayList<>();
+    protected RoomCategoryRecord[] getRoomCat(){
+        List<RoomCategoryRecord> table = new ArrayList<>();
         try {
             PreparedStatement pst = connection.prepareStatement("SELECT * FROM projekt.kategorie_pokoi", ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = pst.executeQuery();
             while (rs.next())  {
-                RoomCat temp = new RoomCat(rs.getInt("kategoria_id"),rs.getString("nazwa_kategorii"),rs.getDouble("podstawa_cenowa"));
+                RoomCategoryRecord temp = new RoomCategoryRecord(rs.getInt("kategoria_id"),rs.getString("nazwa_kategorii"),rs.getDouble("podstawa_cenowa"));
                 table.add(temp);
             }
             rs.close();
             pst.close();    }
         catch(SQLException e)  {
             System.out.println("Blad podczas przetwarzania danych:"+e) ;   }
-        return  table.toArray(new RoomCat[0]);
+        return  table.toArray(new RoomCategoryRecord[0]);
     }
 
     // get name of the category of the room with the given id

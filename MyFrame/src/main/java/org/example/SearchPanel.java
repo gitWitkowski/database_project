@@ -35,7 +35,7 @@ public class SearchPanel extends JPanel {
 
     // label and combo box for room type
     private JLabel roomCatLabel = new JLabel("Rodzaj pokoju:");
-    private JComboBox<RoomCat> roomCatList;
+    private JComboBox<RoomCategoryRecord> roomCatList;
 
     // label and spinner for number of guests
     private SpinnerNumberModel model = new SpinnerNumberModel(1, 1, 9.0, 1.0);
@@ -52,7 +52,7 @@ public class SearchPanel extends JPanel {
             start = startDate.getDate();
             end = endDate.getDate();
             city = String.valueOf(cityList.getSelectedItem());
-            cat_id = ((RoomCat)roomCatList.getSelectedItem()).id();
+            cat_id = ((RoomCategoryRecord)roomCatList.getSelectedItem()).id();
             numOfPeople = ((Double)numOfGuestSpinner.getValue()).intValue();
 //            System.out.println(start);
 //            System.out.println(end);
