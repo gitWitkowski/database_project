@@ -25,7 +25,7 @@ public class RoomsPanel extends JPanel {
     }
 
     // constructor when displaying only available rooms
-    RoomsPanel(SQLHelper sql, MainFrame mainFrame, Room[] tab){
+    RoomsPanel(SQLHelper sql, MainFrame mainFrame, RoomRecord[] tab){
         this.sql = sql;
         this.mainFrame = mainFrame;
         initGUI(tab);
@@ -35,16 +35,16 @@ public class RoomsPanel extends JPanel {
     private class RoomCell extends JPanel implements MouseListener {
 
         // room record
-        protected Room room;
+        protected RoomRecord roomRecord;
 
         // necessary labels providing information
         protected JLabel hotelName;
         protected JLabel roomCat;
         protected JLabel maxGuests;
 
-        RoomCell(Room room) {
-            this.room = room;
-            this.roomCat = new JLabel(sql.getRoomCatName(room.room_id()));
+        RoomCell(RoomRecord roomRecord) {
+            this.roomRecord = roomRecord;
+            this.roomCat = new JLabel(sql.getRoomCatName(roomRecord.room_id()));
             this.initCellGUI();
         }
 
@@ -76,13 +76,13 @@ public class RoomsPanel extends JPanel {
     }
 
     // create GUI
-    private void initGUI(Room[] table){
+    private void initGUI(RoomRecord[] table){
         this.setLayout(new BorderLayout());
         contentPanel.setLayout(new BoxLayout(contentPanel,BoxLayout.Y_AXIS));
 
         // create cells for all rooms from given hotel
-        for (Room room : table) {
-            RoomCell cell = new RoomCell(room);
+        for (RoomRecord roomRecord : table) {
+            RoomCell cell = new RoomCell(roomRecord);
             cell.setPreferredSize(new Dimension(100, 200));
             contentPanel.add(cell);
         }

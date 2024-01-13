@@ -25,13 +25,13 @@ public class SQLHelper {
     }
 
     // get table of hotel records
-    protected Hotel[] getHotels(){
-        List<Hotel> table = new ArrayList<>();
+    protected HotelRecord[] getHotels(){
+        List<HotelRecord> table = new ArrayList<>();
         try {
             PreparedStatement pst = connection.prepareStatement("SELECT * FROM projekt.hotele", ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = pst.executeQuery();
             while (rs.next())  {
-                Hotel temp = new Hotel(rs.getInt("hotel_id"),
+                HotelRecord temp = new HotelRecord(rs.getInt("hotel_id"),
                         rs.getString("nazwa"),rs.getString("miasto"),
                         rs.getString("adres"), rs.getDouble("srednia_ocena"));
                 table.add(temp);
@@ -40,18 +40,18 @@ public class SQLHelper {
             pst.close();    }
         catch(SQLException e)  {
             System.out.println("Blad podczas przetwarzania danych:"+e) ;   }
-        return  table.toArray(new Hotel[0]);
+        return  table.toArray(new HotelRecord[0]);
     }
 
     // get table of rooms records
-    protected Room[] getRooms(int hotel_id){
-        List<Room> table = new ArrayList<>();
+    protected RoomRecord[] getRooms(int hotel_id){
+        List<RoomRecord> table = new ArrayList<>();
         try {
             PreparedStatement pst = connection.prepareStatement("SELECT * FROM projekt.pokoje p where hotel_id = ?", ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
             pst.setInt(1, hotel_id);
             ResultSet rs = pst.executeQuery();
             while (rs.next())  {
-                Room temp = new Room(
+                RoomRecord temp = new RoomRecord(
                         rs.getInt("pokoj_id"),
                         rs.getInt("hotel_id"),
                         rs.getInt("kategoria_id"),
@@ -64,7 +64,7 @@ public class SQLHelper {
             pst.close();    }
         catch(SQLException e)  {
             System.out.println("Blad podczas przetwarzania danych:"+e) ;   }
-        return  table.toArray(new Room[0]);
+        return  table.toArray(new RoomRecord[0]);
     }
 
     // get table of room categories records
@@ -103,8 +103,8 @@ public class SQLHelper {
 
     // get all rooms available for given conditions
     // calls plpgsql function
-    protected Room[] getFreeRooms(int miastoID, LocalDate poczatek, LocalDate koniec, int kategoriaID, int iloscOsob){
-        List<Room> table = new ArrayList<>();
+    protected RoomRecord[] getFreeRooms(int miastoID, LocalDate poczatek, LocalDate koniec, int kategoriaID, int iloscOsob){
+        List<RoomRecord> table = new ArrayList<>();
         try {
             CallableStatement cst = connection.prepareCall(
             "{call projekt.wolne_pokoje(?, ?, ?, ?, ?)}"
@@ -118,7 +118,7 @@ public class SQLHelper {
             ResultSet rs ;
             rs = cst.executeQuery();
             while (rs.next())  {
-                Room temp = new Room(
+                RoomRecord temp = new RoomRecord(
                         rs.getInt("pokoj_id"),
                         rs.getInt("hotel_id"),
                         rs.getInt("kategoria_id"),
@@ -133,6 +133,6 @@ public class SQLHelper {
         }
         catch(SQLException e)  {
             System.out.println("Blad podczas przetwarzania danych:"+e) ;   }
-        return  table.toArray(new Room[0]);
+        return  table.toArray(new RoomRecord[0]);
     }
 }

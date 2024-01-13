@@ -27,18 +27,18 @@ public class HotelsPanel extends JPanel {
     private class HotelCell extends JPanel implements MouseListener {
 
         // hotel record
-        protected Hotel hotel;
+        protected HotelRecord hotelRecord;
 
         // necessary labels providing information
         protected JLabel hotelName;
         protected JLabel city;
         protected JLabel rating;
 
-        HotelCell(Hotel hotel) {
-            this.hotel = hotel;
-            this.hotelName = new JLabel(hotel.name());
-            this.city = new JLabel(hotel.city());
-            this.rating = new JLabel(""+hotel.rating());
+        HotelCell(HotelRecord hotelRecord) {
+            this.hotelRecord = hotelRecord;
+            this.hotelName = new JLabel(hotelRecord.name());
+            this.city = new JLabel(hotelRecord.city());
+            this.rating = new JLabel(""+ hotelRecord.rating());
             this.initCellGUI();
         }
 
@@ -55,7 +55,7 @@ public class HotelsPanel extends JPanel {
         // clicking on a cell results in opening panel with rooms from a given hotel
         @Override
         public void mouseClicked(MouseEvent e) {
-            mainFrame.changePanel(new RoomsPanel(sql, mainFrame, hotel.hotel_id()));
+            mainFrame.changePanel(new RoomsPanel(sql, mainFrame, hotelRecord.hotel_id()));
         }
         @Override
         public void mousePressed(MouseEvent e) {}
@@ -77,9 +77,9 @@ public class HotelsPanel extends JPanel {
         contentPanel.setLayout(new BoxLayout(contentPanel,BoxLayout.Y_AXIS));
 
         // create cells for all hotels from database
-        Hotel[] tab = sql.getHotels();
-        for (Hotel hotel : tab) {
-            HotelCell cell = new HotelCell(hotel);
+        HotelRecord[] tab = sql.getHotels();
+        for (HotelRecord hotelRecord : tab) {
+            HotelCell cell = new HotelCell(hotelRecord);
             cell.setPreferredSize(new Dimension(100, 200));
             contentPanel.add(cell);
         }

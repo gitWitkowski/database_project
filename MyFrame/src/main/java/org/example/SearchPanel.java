@@ -3,10 +3,8 @@ package org.example;
 import com.github.lgooddatepicker.components.DatePicker;
 import com.github.lgooddatepicker.components.DatePickerSettings;
 import com.github.lgooddatepicker.optionalusertools.DateChangeListener;
-import com.github.lgooddatepicker.optionalusertools.DateHighlightPolicy;
 import com.github.lgooddatepicker.optionalusertools.DateVetoPolicy;
 import com.github.lgooddatepicker.zinternaltools.DateChangeEvent;
-import com.github.lgooddatepicker.zinternaltools.HighlightInformation;
 
 import javax.swing.*;
 import java.awt.*;
@@ -61,7 +59,7 @@ public class SearchPanel extends JPanel {
 //            System.out.println(city);
 //            System.out.println(cat_id);
 //            System.out.println(numOfPeople);
-            Room[] temp = sql.getFreeRooms(1, start, end,1,3 );
+            RoomRecord[] temp = sql.getFreeRooms(1, start, end,1,3 );
             mainFrame.changePanel(new RoomsPanel(sql, mainFrame, temp));
         }
     };
