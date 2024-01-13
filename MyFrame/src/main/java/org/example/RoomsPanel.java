@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.time.LocalDate;
 
 public class RoomsPanel extends JPanel {
 
@@ -17,6 +18,11 @@ public class RoomsPanel extends JPanel {
     private JPanel contentPanel = new JPanel();
     private JScrollPane scrollPane = new JScrollPane(contentPanel);
 
+    // start and end date, number of guests to pass to RoomOfferPanel
+    private LocalDate start = null;
+    private LocalDate end = null;
+    private int numOfGuests;
+
     // constructor when displaying all the rooms in a certain hotel
     RoomsPanel(SQLHelper sql, MainFrame mainFrame, int id){
         this.sql = sql;
@@ -25,9 +31,12 @@ public class RoomsPanel extends JPanel {
     }
 
     // constructor when displaying only available rooms
-    RoomsPanel(SQLHelper sql, MainFrame mainFrame, RoomRecord[] tab){
+    RoomsPanel(SQLHelper sql, MainFrame mainFrame, RoomRecord[] tab, LocalDate start, LocalDate end, int numOfGuests){
         this.sql = sql;
         this.mainFrame = mainFrame;
+        this.start = start;
+        this.end = end;
+        this.numOfGuests = numOfGuests;
         initGUI(tab);
     }
 
@@ -59,7 +68,7 @@ public class RoomsPanel extends JPanel {
 
         @Override
         public void mouseClicked(MouseEvent e) {
-
+            mainFrame.changePanel(new RoomOfferPanel(sql, mainFrame, roomRecord.room_id(), start, end, numOfGuests));
         }
         @Override
         public void mousePressed(MouseEvent e) {}

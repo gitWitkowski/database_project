@@ -59,8 +59,8 @@ public class SearchPanel extends JPanel {
 //            System.out.println(city);
 //            System.out.println(cat_id);
 //            System.out.println(numOfPeople);
-            RoomRecord[] temp = sql.getFreeRooms(1, start, end,1,3 );
-            mainFrame.changePanel(new RoomsPanel(sql, mainFrame, temp));
+            RoomRecord[] tab = sql.getFreeRooms(1, start, end,1,3 );
+            mainFrame.changePanel(new RoomsPanel(sql, mainFrame, tab, start, end, numOfPeople));
         }
     };
 

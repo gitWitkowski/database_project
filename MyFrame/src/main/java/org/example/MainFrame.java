@@ -15,6 +15,8 @@ public class MainFrame extends JFrame {
     // reference to itself
     private final MainFrame that = this;
 
+    private boolean isLogged = false;
+
     // GUI is build with these 3 JPanels
     private final JPanel titlePanel = new JPanel();
     private final JPanel navPanel = new JPanel();
@@ -113,5 +115,9 @@ public class MainFrame extends JFrame {
         registerBtn.addActionListener(registerBtnListener);
         searchBtn.addActionListener(searchBtnListener);
         viewBtn.addActionListener(viewBtnListener);
+    }
+
+    protected boolean getIsLogged(){
+        return isLogged;
     }
 }

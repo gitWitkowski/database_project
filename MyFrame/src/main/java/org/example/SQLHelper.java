@@ -1,9 +1,13 @@
 package org.example;
 
+import org.apache.ibatis.type.LocalDateTimeTypeHandler;
+
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 // class responsible for connection and interactions with database
 public class SQLHelper {
@@ -134,5 +138,23 @@ public class SQLHelper {
         catch(SQLException e)  {
             System.out.println("Blad podczas przetwarzania danych:"+e) ;   }
         return  table.toArray(new RoomRecord[0]);
+    }
+
+    protected List<LocalDate[]> getAllReservations(int room_id){
+        List<LocalDate[]> table = new ArrayList<>();
+        try {
+            PreparedStatement pst = connection.prepareStatement("select poczatek_pobytu, koniec_pobytu  from projekt.rezerwacje r where pokoj_id = ?", ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            pst.setInt(1,room_id);
+            ResultSet rs = pst.executeQuery();
+            while (rs.next())  {
+                LocalDate start = rs.getDate("poczatek_pobytu").toLocalDate();
+                LocalDate end = rs.getDate("koniec_pobytu").toLocalDate();
+                table.add(new LocalDate[]{start, end});
+            }
+            rs.close();
+            pst.close();    }
+        catch(SQLException e)  {
+            System.out.println("Blad podczas przetwarzania danych:"+e) ;   }
+        return table;
     }
 }
