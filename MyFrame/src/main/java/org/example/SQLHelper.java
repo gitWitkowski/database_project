@@ -1,14 +1,10 @@
 package org.example;
 
-import org.apache.ibatis.type.LocalDateTimeTypeHandler;
-
 import javax.swing.*;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 // class responsible for connection and interactions with database
 public class SQLHelper {
@@ -291,8 +287,142 @@ public class SQLHelper {
         }
         catch(SQLException e)  {
             System.out.println("Blad podczas przetwarzania danych:"+e);
-            JOptionPane.showMessageDialog(null, e.getMessage(), "BLAD", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, e.getMessage().split("#")[0], "BLAD", JOptionPane.ERROR_MESSAGE);
         }
         return false;
+    }
+
+    protected Object[][] getTableReservationsContent(int userId){
+        List<Object[]> table = new ArrayList<>();
+        try {
+            PreparedStatement pst = connection.prepareStatement("select row_number() over(ORDER by poczatek_pobytu) as numer_wiersza, * FROM projekt.rezerwacje_goscia where gosc_id=?", ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            pst.setInt(1,userId);
+            ResultSet rs = pst.executeQuery();
+            while (rs.next())  {
+                table.add(new Object[]{
+                        rs.getString("numer_wiersza"),
+                        rs.getString("rezerwacja_id"),
+                        rs.getString("nazwa_kategorii"),
+                        rs.getString("nazwa"),
+                        rs.getString("miasto"),
+                        rs.getDate("poczatek_pobytu").toLocalDate().toString(),
+                        rs.getDate("koniec_pobytu").toLocalDate().toString(),
+                        String.valueOf(rs.getInt("liczba_gosci"))
+                });
+            }
+            rs.close();
+            pst.close();    }
+        catch(SQLException e)  {
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+            JOptionPane.showMessageDialog(null, e.getMessage(), "BLAD", JOptionPane.ERROR_MESSAGE);
+        }
+
+        Object[][] returnArray = new Object[table.size()][];
+        for(int i=0; i<table.size(); i++){
+            returnArray[i] = new Object[8];
+            for(int j=0; j<8; j++){
+                returnArray[i][j] = table.get(i)[j];
+            }
+        }
+        return returnArray;
+    }
+
+    protected Object[][] getTableReservationsContent(){
+        List<Object[]> table = new ArrayList<>();
+        try {
+            PreparedStatement pst = connection.prepareStatement("select row_number() over(ORDER by poczatek_pobytu) as numer_wiersza, * FROM projekt.rezerwacje_goscia", ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = pst.executeQuery();
+            while (rs.next())  {
+                table.add(new Object[]{
+                        rs.getString("numer_wiersza"),
+                        rs.getString("rezerwacja_id"),
+                        rs.getString("nazwa_kategorii"),
+                        rs.getString("nazwa"),
+                        rs.getString("miasto"),
+                        rs.getDate("poczatek_pobytu").toLocalDate().toString(),
+                        rs.getDate("koniec_pobytu").toLocalDate().toString(),
+                        String.valueOf(rs.getInt("liczba_gosci"))
+                });
+            }
+            rs.close();
+            pst.close();    }
+        catch(SQLException e)  {
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+            JOptionPane.showMessageDialog(null, e.getMessage(), "BLAD", JOptionPane.ERROR_MESSAGE);
+        }
+
+        Object[][] returnArray = new Object[table.size()][];
+        for(int i=0; i<table.size(); i++){
+            returnArray[i] = new Object[8];
+            for(int j=0; j<8; j++){
+                returnArray[i][j] = table.get(i)[j];
+            }
+        }
+        return returnArray;
+    }
+
+    protected Object[][] getTableBillsContent(int userId){
+        List<Object[]> table = new ArrayList<>();
+        try {
+            PreparedStatement pst = connection.prepareStatement("select * FROM projekt.rachunki_goscia where gosc_id=?", ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            pst.setInt(1,userId);
+            ResultSet rs = pst.executeQuery();
+            while (rs.next())  {
+                table.add(new Object[]{
+                        rs.getString("rezerwacja_id"),
+                        rs.getString("nazwa"),
+                        rs.getString("forma_platnosci"),
+                        String.valueOf(rs.getString("suma_kosztow")),
+                        String.valueOf(rs.getString("podstawa_cenowa")),
+                        String.valueOf(rs.getString("ilosc_nocy")),
+                });
+            }
+            rs.close();
+            pst.close();    }
+        catch(SQLException e)  {
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+            JOptionPane.showMessageDialog(null, e.getMessage(), "BLAD", JOptionPane.ERROR_MESSAGE);
+        }
+
+        Object[][] returnArray = new Object[table.size()][];
+        for(int i=0; i<table.size(); i++){
+            returnArray[i] = new Object[6];
+            for(int j=0; j<6; j++){
+                returnArray[i][j] = table.get(i)[j];
+            }
+        }
+        return returnArray;
+    }
+
+    protected Object[][] getTableBillsContent(){
+        List<Object[]> table = new ArrayList<>();
+        try {
+            PreparedStatement pst = connection.prepareStatement("select * FROM projekt.rachunki_goscia", ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = pst.executeQuery();
+            while (rs.next())  {
+                table.add(new Object[]{
+                        rs.getString("rezerwacja_id"),
+                        rs.getString("nazwa"),
+                        rs.getString("forma_platnosci"),
+                        String.valueOf(rs.getString("suma_kosztow")),
+                        String.valueOf(rs.getString("podstawa_cenowa")),
+                        String.valueOf(rs.getString("ilosc_nocy")),
+                });
+            }
+            rs.close();
+            pst.close();    }
+        catch(SQLException e)  {
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+            JOptionPane.showMessageDialog(null, e.getMessage(), "BLAD", JOptionPane.ERROR_MESSAGE);
+        }
+
+        Object[][] returnArray = new Object[table.size()][];
+        for(int i=0; i<table.size(); i++){
+            returnArray[i] = new Object[6];
+            for(int j=0; j<6; j++){
+                returnArray[i][j] = table.get(i)[j];
+            }
+        }
+        return returnArray;
     }
 }
