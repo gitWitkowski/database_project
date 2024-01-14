@@ -16,6 +16,7 @@ public class MainFrame extends JFrame {
     private final MainFrame that = this;
 
     private boolean isLogged = false;
+    private boolean isSuperUser = false;
 
     // GUI is build with these 3 JPanels
     private final JPanel titlePanel = new JPanel();
@@ -25,6 +26,7 @@ public class MainFrame extends JFrame {
     // navPanel buttons
     private JButton loginBtn = new JButton("LOGOWANIE");
     private JButton registerBtn = new JButton("REJESTRACJA");
+    private JButton logoutBtn = new JButton("WYLOGUJ");
     private JButton searchBtn = new JButton("ZAREZERWUJ TERMIN");
     private JButton viewBtn = new JButton("PRZEGLADAJ OFERTY");
 
@@ -42,6 +44,17 @@ public class MainFrame extends JFrame {
         public void actionPerformed(ActionEvent e) {
             System.out.println("register button");
             changePanel(new RegisterPanel(sql, that));
+        }
+    };
+
+    private ActionListener logoutBtnListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            logoutUser();
+            if(!isLogged){
+                JOptionPane.showMessageDialog(null, "Uzytkownik wylogowany poprawnie", "Uwaga", JOptionPane.INFORMATION_MESSAGE);
+                changePanel(new LoginPanel(sql, that));
+            }
         }
     };
 
@@ -97,8 +110,11 @@ public class MainFrame extends JFrame {
         navPanel.setPreferredSize(new Dimension(200,150));
         navPanel.add(loginBtn);
         navPanel.add(registerBtn);
+        navPanel.add(logoutBtn);
         navPanel.add(searchBtn);
         navPanel.add(viewBtn);
+
+        logoutBtn.setVisible(false);
 
         // contentPanel
         contentPanel.setLayout(new BorderLayout());
@@ -115,9 +131,40 @@ public class MainFrame extends JFrame {
         registerBtn.addActionListener(registerBtnListener);
         searchBtn.addActionListener(searchBtnListener);
         viewBtn.addActionListener(viewBtnListener);
+        logoutBtn.addActionListener(logoutBtnListener);
+    }
+
+    private void logoutUser(){
+        if(getIsLogged()){
+            loginBtn.setVisible(true);
+            registerBtn.setVisible((true));
+            logoutBtn.setVisible(false);
+            isLogged = false;
+        }
+    }
+
+    protected void loginUser(){
+        if(!getIsLogged()){
+            loginBtn.setVisible(false);
+            registerBtn.setVisible(false);
+            logoutBtn.setVisible(true);
+            isLogged = true;
+        }
     }
 
     protected boolean getIsLogged(){
         return isLogged;
+    }
+
+    protected void setLogged(boolean val){
+        isLogged = val;
+    }
+
+    protected boolean getIsSuperUser(){
+        return isSuperUser;
+    }
+
+    protected void setSuperUser(boolean val){
+        isSuperUser = val;
     }
 }

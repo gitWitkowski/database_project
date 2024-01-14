@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 
 public class RegisterPanel extends JPanel {
 
@@ -39,7 +40,50 @@ public class RegisterPanel extends JPanel {
     private ActionListener registerBtnListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            System.out.println("Rejestruj");
+//            System.out.println("Rejestruj");
+//            System.out.println(loginField.getText());
+//            System.out.println(passwordField.getText());
+//            System.out.println(emailField.getText());
+//            System.out.println(fnameField.getText());
+//            System.out.println(lnameField.getText());
+//            System.out.println(peselField.getText());
+//            System.out.println(phoneField.getText());
+            if(Arrays.equals(passwordField.getPassword(), passwordField2.getPassword())){
+                int response = sql.registerUser(
+                        loginField.getText(),
+                        passwordField.getPassword(),
+                        emailField.getText(),
+                        fnameField.getText(),
+                        lnameField.getText(),
+                        peselField.getText(),
+                        phoneField.getText()
+                );
+                switch (response){
+                    case 0:
+                        System.out.println("dodano uzytkownika");
+                        JOptionPane.showMessageDialog(null, "Zarejestrowano nowego uzytkownika", "SUKCES", JOptionPane.PLAIN_MESSAGE);
+                        mainFrame.changePanel(new LoginPanel(sql,mainFrame));
+                        break;
+
+                    case 1:
+                        JOptionPane.showMessageDialog(null, "Istnieje juz uzytkownik posiadajacy taki login", "BLAD", JOptionPane.ERROR_MESSAGE);
+                        break;
+
+                    case 2:
+                        JOptionPane.showMessageDialog(null, "Istnieje juz uzytkownik o podanym adresie email", "BLAD", JOptionPane.ERROR_MESSAGE);
+                        break;
+
+                    case 3:
+//                        JOptionPane.showMessageDialog(null, "Wystapil blad przy dodawaniu rekordu", "BLAD", JOptionPane.ERROR_MESSAGE);
+                        break;
+
+                    default:
+                        JOptionPane.showMessageDialog(null, "Wystapil nieznany problem", "BLAD", JOptionPane.ERROR_MESSAGE);
+                        break;
+                }
+            }
+            else
+                JOptionPane.showMessageDialog(null, "Podane hasla nie sa identyczne", "BLAD", JOptionPane.ERROR_MESSAGE);
         }
     };
 

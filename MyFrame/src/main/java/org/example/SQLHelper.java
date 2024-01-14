@@ -2,6 +2,7 @@ package org.example;
 
 import org.apache.ibatis.type.LocalDateTimeTypeHandler;
 
+import javax.swing.*;
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ public class SQLHelper {
             System.out.println("Successfully Connected to the database!");
         } catch (SQLException e) {
             System.out.println("Could not connect to the database " + e.getMessage());
+            JOptionPane.showMessageDialog(null, "Could not connect to the database " + e.getMessage(), "BLAD", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -43,7 +45,9 @@ public class SQLHelper {
             rs.close();
             pst.close();    }
         catch(SQLException e)  {
-            System.out.println("Blad podczas przetwarzania danych:"+e) ;   }
+            System.out.println("Blad podczas przetwarzania danych:"+e) ;
+            JOptionPane.showMessageDialog(null, e.getMessage(), "BLAD", JOptionPane.ERROR_MESSAGE);
+        }
         return  table.toArray(new HotelRecord[0]);
     }
 
@@ -67,7 +71,9 @@ public class SQLHelper {
             rs.close();
             pst.close();    }
         catch(SQLException e)  {
-            System.out.println("Blad podczas przetwarzania danych:"+e) ;   }
+            System.out.println("Blad podczas przetwarzania danych:"+e) ;
+            JOptionPane.showMessageDialog(null, e.getMessage(), "BLAD", JOptionPane.ERROR_MESSAGE);
+        }
         return  table.toArray(new RoomRecord[0]);
     }
 
@@ -84,7 +90,9 @@ public class SQLHelper {
             rs.close();
             pst.close();    }
         catch(SQLException e)  {
-            System.out.println("Blad podczas przetwarzania danych:"+e) ;   }
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+            JOptionPane.showMessageDialog(null, e.getMessage(), "BLAD", JOptionPane.ERROR_MESSAGE);
+        }
         return  table.toArray(new RoomCategoryRecord[0]);
     }
 
@@ -101,7 +109,9 @@ public class SQLHelper {
             rs.close();
             pst.close();    }
         catch(SQLException e)  {
-            System.out.println("Blad podczas przetwarzania danych:"+e) ;   }
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+            JOptionPane.showMessageDialog(null, e.getMessage(), "BLAD", JOptionPane.ERROR_MESSAGE);
+        }
         return  temp;
     }
 
@@ -136,7 +146,9 @@ public class SQLHelper {
 
         }
         catch(SQLException e)  {
-            System.out.println("Blad podczas przetwarzania danych:"+e) ;   }
+            System.out.println("Blad podczas przetwarzania danych:"+e) ;
+            JOptionPane.showMessageDialog(null, e.getMessage(), "BLAD", JOptionPane.ERROR_MESSAGE);
+        }
         return  table.toArray(new RoomRecord[0]);
     }
 
@@ -154,7 +166,9 @@ public class SQLHelper {
             rs.close();
             pst.close();    }
         catch(SQLException e)  {
-            System.out.println("Blad podczas przetwarzania danych:"+e) ;   }
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+            JOptionPane.showMessageDialog(null, e.getMessage(), "BLAD", JOptionPane.ERROR_MESSAGE);
+        }
         return table;
     }
 
@@ -180,6 +194,7 @@ public class SQLHelper {
         }
         catch(SQLException e)  {
             System.out.println("Blad podczas przetwarzania danych:"+e);
+            JOptionPane.showMessageDialog(null, e.getMessage(), "BLAD", JOptionPane.ERROR_MESSAGE);
         }
         return new boolean[]{false,false};
     }
@@ -209,7 +224,32 @@ public class SQLHelper {
         }
         catch(SQLException e)  {
             System.out.println("Blad podczas przetwarzania danych:"+e);
+            JOptionPane.showMessageDialog(null, e.getMessage().split("#")[0], "BLAD", JOptionPane.ERROR_MESSAGE);
         }
         return 3;
+    }
+
+    protected GuestRecord getGuest(String login){
+        try {
+            PreparedStatement pst = connection.prepareStatement("select * from projekt.goscie r where login = ?", ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            pst.setString(1,login);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next())  {
+                return new GuestRecord(
+                        rs.getInt("gosc_id"),
+                        rs.getString("login"),
+                        rs.getString("imie"),
+                        rs.getString("nazwisko"),
+                        rs.getString("pesel"),
+                        rs.getString("nr_telefonu")
+                );
+            }
+            rs.close();
+            pst.close();    }
+        catch(SQLException e)  {
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+            JOptionPane.showMessageDialog(null, e.getMessage(), "BLAD", JOptionPane.ERROR_MESSAGE);
+        }
+        return null;
     }
 }

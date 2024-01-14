@@ -21,7 +21,16 @@ public class LoginPanel extends JPanel {
     private ActionListener loginBtnListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            System.out.println("Loguj");
+            if(sql.checkUserCredentials(loginField.getText(), passwordField.getPassword())[0]){
+                mainFrame.loginUser();
+                if(mainFrame.getIsLogged()){
+                    mainFrame.setSuperUser(sql.checkUserCredentials(loginField.getText(), passwordField.getPassword())[1]);
+                    mainFrame.changePanel(new UserPanel(sql, mainFrame, loginField.getText()));
+                }
+            }else{
+                JOptionPane.showMessageDialog(null, "Niewlasciwy login lub haslo", "BLAD", JOptionPane.ERROR_MESSAGE);
+            }
+
         }
     };
 
