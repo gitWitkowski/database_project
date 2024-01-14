@@ -46,7 +46,14 @@ public class RoomOfferPanel extends JPanel {
             // to do
             // add record to database
             if(mainFrame.getIsLogged()){
-
+                System.out.println(roomId);
+                System.out.println(mainFrame.getCurrentUser().guestId());
+                boolean czyDodano = sql.makeReservation(roomId, mainFrame.getCurrentUser().guestId(), startDate.getDate(),
+                        endDate.getDate(), ((Double) numOfGuestSpinner.getValue()).intValue());
+                if(czyDodano)
+                    JOptionPane.showMessageDialog(null, "Dokonano rezerwacji", "Uwaga", JOptionPane.INFORMATION_MESSAGE);
+                else
+                    JOptionPane.showMessageDialog(null, "Rezerwacja nie powiodla sie", "Uwaga", JOptionPane.INFORMATION_MESSAGE);
             }else{
                 JOptionPane.showMessageDialog(null, "Aby dokonac rezerwacji, zaloguj sie lub zarejestruj", "Uwaga", JOptionPane.INFORMATION_MESSAGE);
             }

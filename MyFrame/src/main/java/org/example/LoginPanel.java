@@ -25,6 +25,7 @@ public class LoginPanel extends JPanel {
                 mainFrame.loginUser();
                 if(mainFrame.getIsLogged()){
                     mainFrame.setSuperUser(sql.checkUserCredentials(loginField.getText(), passwordField.getPassword())[1]);
+                    mainFrame.setCurrentUser(sql.getGuest(loginField.getText()));
                     mainFrame.changePanel(new UserPanel(sql, mainFrame, loginField.getText()));
                 }
             }else{

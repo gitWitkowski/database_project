@@ -59,7 +59,7 @@ public class SearchPanel extends JPanel {
 //            System.out.println(city);
 //            System.out.println(cat_id);
 //            System.out.println(numOfPeople);
-            RoomRecord[] tab = sql.getFreeRooms(1, start, end,1,3 );
+            RoomRecord[] tab = sql.getFreeRooms(city, start, end,cat_id,numOfPeople );
             mainFrame.changePanel(new RoomsPanel(sql, mainFrame, tab, start, end, numOfPeople));
         }
     };
@@ -105,7 +105,7 @@ public class SearchPanel extends JPanel {
 
     // init GUI for the search panel
     private void initGUI(){
-        cityList = new JComboBox(sql.getHotels());
+        cityList = new JComboBox(sql.getCities());
         roomCatList = new JComboBox(sql.getRoomCat());
 
         this.setLayout(new GridBagLayout());

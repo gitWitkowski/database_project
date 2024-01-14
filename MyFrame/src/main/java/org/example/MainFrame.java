@@ -18,6 +18,16 @@ public class MainFrame extends JFrame {
     private boolean isLogged = false;
     private boolean isSuperUser = false;
 
+    private GuestRecord currentUser;
+
+    protected void setCurrentUser(GuestRecord gr){
+        this.currentUser = gr;
+    }
+
+    protected GuestRecord getCurrentUser(){
+        return currentUser;
+    }
+
     // GUI is build with these 3 JPanels
     private final JPanel titlePanel = new JPanel();
     private final JPanel navPanel = new JPanel();

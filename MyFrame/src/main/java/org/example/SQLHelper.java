@@ -34,7 +34,7 @@ public class SQLHelper {
     protected HotelRecord[] getHotels(){
         List<HotelRecord> table = new ArrayList<>();
         try {
-            PreparedStatement pst = connection.prepareStatement("SELECT * FROM projekt.hotele", ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            PreparedStatement pst = connection.prepareStatement("SELECT distinct * FROM projekt.hotele", ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
             ResultSet rs = pst.executeQuery();
             while (rs.next())  {
                 HotelRecord temp = new HotelRecord(rs.getInt("hotel_id"),
@@ -49,6 +49,24 @@ public class SQLHelper {
             JOptionPane.showMessageDialog(null, e.getMessage(), "BLAD", JOptionPane.ERROR_MESSAGE);
         }
         return  table.toArray(new HotelRecord[0]);
+    }
+
+    // get table of cities
+    protected String[] getCities(){
+        List<String> table = new ArrayList<>();
+        try {
+            PreparedStatement pst = connection.prepareStatement("SELECT distinct miasto FROM projekt.hotele", ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = pst.executeQuery();
+            while (rs.next())  {
+                table.add(rs.getString("miasto"));
+            }
+            rs.close();
+            pst.close();    }
+        catch(SQLException e)  {
+            System.out.println("Blad podczas przetwarzania danych:"+e) ;
+            JOptionPane.showMessageDialog(null, e.getMessage(), "BLAD", JOptionPane.ERROR_MESSAGE);
+        }
+        return  table.toArray(new String[0]);
     }
 
     // get table of rooms records
@@ -117,13 +135,13 @@ public class SQLHelper {
 
     // get all rooms available for given conditions
     // calls plpgsql function
-    protected RoomRecord[] getFreeRooms(int miastoID, LocalDate poczatek, LocalDate koniec, int kategoriaID, int iloscOsob){
+    protected RoomRecord[] getFreeRooms(String miasto, LocalDate poczatek, LocalDate koniec, int kategoriaID, int iloscOsob){
         List<RoomRecord> table = new ArrayList<>();
         try {
             CallableStatement cst = connection.prepareCall(
             "{call projekt.wolne_pokoje(?, ?, ?, ?, ?)}"
             );
-            cst.setInt(1,miastoID);
+            cst.setString(1,miasto);
             cst.setObject(2,poczatek);
             cst.setObject(3,koniec);
             cst.setInt(4,kategoriaID);
@@ -134,7 +152,7 @@ public class SQLHelper {
             while (rs.next())  {
                 RoomRecord temp = new RoomRecord(
                         rs.getInt("pokoj_id"),
-                        rs.getInt("hotel_id"),
+                        rs.getInt("hotelID"),
                         rs.getInt("kategoria_id"),
                         rs.getInt("max_gosci"),
                         false
@@ -251,5 +269,30 @@ public class SQLHelper {
             JOptionPane.showMessageDialog(null, e.getMessage(), "BLAD", JOptionPane.ERROR_MESSAGE);
         }
         return null;
+    }
+
+    protected boolean makeReservation(int roomID,int guestID, LocalDate start, LocalDate end, int numOfGuests){
+        try {
+            CallableStatement cst = connection.prepareCall("{call projekt.dodaj_rezerwacje(?, ?, ?, ?, ?)}");
+
+            cst.setInt(1, roomID);
+            cst.setInt(2, guestID);
+            cst.setDate(3, java.sql.Date.valueOf(start));
+            cst.setDate(4, java.sql.Date.valueOf(end));
+            cst.setInt(5, numOfGuests);
+
+            ResultSet rs ;
+            rs = cst.executeQuery();
+            if (rs.next())  {
+                return rs.getBoolean(1);
+            }
+            rs.close();
+            cst.close();
+        }
+        catch(SQLException e)  {
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+            JOptionPane.showMessageDialog(null, e.getMessage(), "BLAD", JOptionPane.ERROR_MESSAGE);
+        }
+        return false;
     }
 }
