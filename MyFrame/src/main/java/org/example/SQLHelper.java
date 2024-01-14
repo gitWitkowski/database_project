@@ -157,4 +157,59 @@ public class SQLHelper {
             System.out.println("Blad podczas przetwarzania danych:"+e) ;   }
         return table;
     }
+
+    protected boolean[] checkUserCredentials(String login, char[] password){
+        try {
+            CallableStatement cst = connection.prepareCall("{call projekt.autoryzuj(?, ?)}");
+            cst.setString(1, login);
+            StringBuilder pass = new StringBuilder();
+            for(var c : password)
+                pass.append(String.valueOf(c));
+
+            cst.setString(2, pass.toString());
+
+            ResultSet rs ;
+            rs = cst.executeQuery();
+            if (rs.next())  {
+                return new boolean[]{
+                        rs.getBoolean(1), rs.getBoolean(2)
+                };
+            }
+            rs.close();
+            cst.close();
+        }
+        catch(SQLException e)  {
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+        }
+        return new boolean[]{false,false};
+    }
+
+    protected int registerUser(String login, char[] password, String mail, String fname, String lname, String pesel, String phone){
+        try {
+            CallableStatement cst = connection.prepareCall("{call projekt.dodaj_uzytkownika(?, ?, ?, ?, ?, ?, ?)}");
+            StringBuilder pass = new StringBuilder();
+            for(var c : password)
+                pass.append(String.valueOf(c));
+
+            cst.setString(1, login);
+            cst.setString(2, pass.toString());
+            cst.setString(3, mail);
+            cst.setString(4, fname);
+            cst.setString(5, lname);
+            cst.setString(6, pesel);
+            cst.setString(7, phone);
+            
+            ResultSet rs ;
+            rs = cst.executeQuery();
+            if (rs.next())  {
+                return rs.getInt(1);
+            }
+            rs.close();
+            cst.close();
+        }
+        catch(SQLException e)  {
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+        }
+        return 3;
+    }
 }
