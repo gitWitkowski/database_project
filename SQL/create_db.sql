@@ -2,6 +2,8 @@ drop schema IF exists projekt cascade;
 
 create schema projekt;
 
+
+
 CREATE TABLE projekt.uzytkownicy (
                 login VARCHAR(20) NOT NULL,
                 haslo VARCHAR(20) NOT NULL,

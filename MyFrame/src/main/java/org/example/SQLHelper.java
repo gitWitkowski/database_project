@@ -1,5 +1,10 @@
 package org.example;
 
+import org.apache.ibatis.jdbc.ScriptRunner;
+import org.springframework.core.io.PathResource;
+import org.springframework.core.io.support.EncodedResource;
+import org.springframework.jdbc.datasource.init.ScriptUtils;
+
 import javax.swing.*;
 import java.sql.*;
 import java.time.LocalDate;
@@ -135,7 +140,7 @@ public class SQLHelper {
         List<RoomRecord> table = new ArrayList<>();
         try {
             CallableStatement cst = connection.prepareCall(
-            "{call projekt.wolne_pokoje(?, ?, ?, ?, ?)}"
+            "{call funkcje.wolne_pokoje(?, ?, ?, ?, ?)}"
             );
             cst.setString(1,miasto);
             cst.setObject(2,poczatek);
@@ -188,7 +193,7 @@ public class SQLHelper {
 
     protected boolean[] checkUserCredentials(String login, char[] password){
         try {
-            CallableStatement cst = connection.prepareCall("{call projekt.autoryzuj(?, ?)}");
+            CallableStatement cst = connection.prepareCall("{call funkcje.autoryzuj(?, ?)}");
             cst.setString(1, login);
             StringBuilder pass = new StringBuilder();
             for(var c : password)
@@ -215,7 +220,7 @@ public class SQLHelper {
 
     protected int registerUser(String login, char[] password, String mail, String fname, String lname, String pesel, String phone){
         try {
-            CallableStatement cst = connection.prepareCall("{call projekt.dodaj_uzytkownika(?, ?, ?, ?, ?, ?, ?)}");
+            CallableStatement cst = connection.prepareCall("{call funkcje.dodaj_uzytkownika(?, ?, ?, ?, ?, ?, ?)}");
             StringBuilder pass = new StringBuilder();
             for(var c : password)
                 pass.append(String.valueOf(c));
@@ -269,7 +274,7 @@ public class SQLHelper {
 
     protected boolean makeReservation(int roomID,int guestID, LocalDate start, LocalDate end, int numOfGuests){
         try {
-            CallableStatement cst = connection.prepareCall("{call projekt.dodaj_rezerwacje(?, ?, ?, ?, ?)}");
+            CallableStatement cst = connection.prepareCall("{call funkcje.dodaj_rezerwacje(?, ?, ?, ?, ?)}");
 
             cst.setInt(1, roomID);
             cst.setInt(2, guestID);
@@ -424,5 +429,47 @@ public class SQLHelper {
             }
         }
         return returnArray;
+    }
+
+    protected void resetDB(){
+        ScriptRunner scriptRunner = new ScriptRunner(connection);
+        scriptRunner.setSendFullScript(false);
+        scriptRunner.setStopOnError(true);
+        try{
+
+            boolean continueOrError = false;
+            boolean ignoreFailedDrops = false;
+            String commentPrefix = "--";
+            String separator = ";";
+            String blockCommentStartDelimiter = "/*";
+            String blockCommentEndDelimiter = "*/";
+
+            ScriptUtils.executeSqlScript(
+                    connection,
+                    new EncodedResource(new PathResource("../SQL/create_db.sql")),
+                    continueOrError,
+                    ignoreFailedDrops,
+                    commentPrefix,
+                    separator,
+                    blockCommentStartDelimiter,
+                    blockCommentEndDelimiter
+            );
+
+            ScriptUtils.executeSqlScript(
+                    connection,
+                    new EncodedResource(new PathResource("../SQL/add_data.sql")),
+                    continueOrError,
+                    ignoreFailedDrops,
+                    commentPrefix,
+                    separator,
+                    blockCommentStartDelimiter,
+                    blockCommentEndDelimiter
+            );
+
+            JOptionPane.showMessageDialog(null, "Przywrocono do ustawien domyslnych", "SUKCES", JOptionPane.INFORMATION_MESSAGE);
+        }catch (Exception e){
+            System.out.println("Blad podczas resetowania bazdy: "+e);
+            JOptionPane.showMessageDialog(null, e.getMessage(), "BLAD", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }

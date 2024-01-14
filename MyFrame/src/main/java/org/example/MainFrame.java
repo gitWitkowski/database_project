@@ -40,6 +40,7 @@ public class MainFrame extends JFrame {
     private JButton searchBtn = new JButton("ZAREZERWUJ TERMIN");
     private JButton viewBtn = new JButton("PRZEGLADAJ OFERTY");
     private JButton userPanelBtn = new JButton("PANEL UZYTKOWNIKA");
+    protected JButton resetBtn = new JButton("RESET BAZY");
 
     // event handlers for buttons
     private ActionListener loginBtnListener = new ActionListener() {
@@ -88,7 +89,18 @@ public class MainFrame extends JFrame {
     private ActionListener userPanelBtnListener = new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
-            changePanel(new UserPanel(sql, that, currentUser.login()));
+            if(isSuperUser)
+                changePanel(new UserPanel(sql, that,"admin"));
+            else
+                changePanel(new UserPanel(sql, that, currentUser.login()));
+        }
+    };
+
+    private ActionListener resetBtnListener = new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            System.out.println("RESET");
+            sql.resetDB();
         }
     };
 
@@ -132,9 +144,11 @@ public class MainFrame extends JFrame {
         navPanel.add(searchBtn);
         navPanel.add(viewBtn);
         navPanel.add(userPanelBtn);
+        navPanel.add(resetBtn);
 
         logoutBtn.setVisible(false);
         userPanelBtn.setVisible(false);
+        resetBtn.setVisible(false);
 
         // contentPanel
         contentPanel.setLayout(new BorderLayout());
@@ -153,14 +167,16 @@ public class MainFrame extends JFrame {
         viewBtn.addActionListener(viewBtnListener);
         logoutBtn.addActionListener(logoutBtnListener);
         userPanelBtn.addActionListener(userPanelBtnListener);
+        resetBtn.addActionListener(resetBtnListener);
     }
 
     private void logoutUser(){
         if(getIsLogged()){
             loginBtn.setVisible(true);
-            registerBtn.setVisible((true));
+            registerBtn.setVisible(true);
             logoutBtn.setVisible(false);
             userPanelBtn.setVisible(false);
+            resetBtn.setVisible(false);
             isLogged = false;
         }
     }
