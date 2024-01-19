@@ -1,6 +1,5 @@
 package org.example;
 
-import org.apache.ibatis.jdbc.ScriptRunner;
 import org.springframework.core.io.PathResource;
 import org.springframework.core.io.support.EncodedResource;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
@@ -591,9 +590,6 @@ public class SQLHelper {
      * Reset database to factory settings
      */
     protected void resetDB(){
-        ScriptRunner scriptRunner = new ScriptRunner(connection);
-        scriptRunner.setSendFullScript(false);
-        scriptRunner.setStopOnError(true);
         try{
 
             boolean continueOrError = false;
