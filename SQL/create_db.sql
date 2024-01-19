@@ -2,7 +2,8 @@ drop schema IF exists projekt cascade;
 
 create schema projekt;
 
-
+-- Polecenia tworzace cala strukture bazy danych. 
+-- Polecenia wygenerowane za pomoca programu SQL Power Architect
 
 CREATE TABLE projekt.uzytkownicy (
                 login VARCHAR(20) NOT NULL,
