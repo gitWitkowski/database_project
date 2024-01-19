@@ -131,7 +131,8 @@ public class MainFrame extends JFrame {
         titlePanel.setBackground(Color.black);
         titlePanel.setPreferredSize(new Dimension(70,70));
         titlePanel.setLayout(new GridLayout(1,1));
-        JLabel titleText = new JLabel("HOTEL", SwingConstants.CENTER);
+        JLabel titleText = new JLabel("SERWIS ZARZĄDZANIA REZERWACJAMI HOTELOWYMI", SwingConstants.CENTER);
+        titleText.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 25));
         titleText.setForeground(Color.white);
         titlePanel.add(titleText);
 

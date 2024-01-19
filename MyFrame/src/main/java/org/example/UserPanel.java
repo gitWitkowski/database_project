@@ -24,10 +24,9 @@ public class UserPanel extends JPanel {
 
     private void initGUI(){
         setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
-        if(mainFrame.getIsSuperUser())
-            this.add(new JLabel("Witaj ADMIN"));
-        else
-            this.add(new JLabel("Witaj, " + guest));
+        JLabel helloLabel = new JLabel("Witaj, " + (mainFrame.getIsSuperUser() ? "ADMIN" : guest));
+        helloLabel.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 20));
+        this.add(helloLabel);
 
         String[] columnNamesReservations = {
                 "L.p.",

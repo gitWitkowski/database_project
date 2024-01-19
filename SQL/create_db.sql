@@ -48,7 +48,6 @@ CREATE TABLE projekt.pokoje (
                 hotel_id INTEGER NOT NULL,
                 kategoria_id INTEGER NOT NULL,
                 max_gosci INTEGER NOT NULL,
-                obecnie_zajety BOOLEAN,
                 CONSTRAINT pokoje_pk PRIMARY KEY (pokoj_id)
 );
 
