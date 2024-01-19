@@ -5,6 +5,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Class representing logging panel
+ */
 public class LoginPanel extends JPanel {
 
     private SQLHelper sql;
@@ -19,6 +22,10 @@ public class LoginPanel extends JPanel {
     private JButton loginBtn = new JButton("Zaloguj");
 
     private ActionListener loginBtnListener = new ActionListener() {
+        /**
+         * Checks users credentials and if correct, changes view to logged
+         * @param e the event to be processed
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
             if(sql.checkUserCredentials(loginField.getText(), passwordField.getPassword())[0]){
@@ -37,12 +44,20 @@ public class LoginPanel extends JPanel {
         }
     };
 
+    /**
+     * Class constructor
+     * @param sql SQLHelper reference
+     * @param mainFrame MainFrame reference
+     */
     LoginPanel(SQLHelper sql, MainFrame mainFrame){
         this.sql = sql;
         this.mainFrame = mainFrame;
         initGUI();
     }
 
+    /**
+     * Creates GUI
+     */
     private void initGUI(){
         this.setLayout(new GridBagLayout());
 

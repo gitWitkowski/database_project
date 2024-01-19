@@ -11,16 +11,29 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-// class responsible for connection and interactions with database
+/**
+ * Class responsible for connection and interactions with database
+ */
 public class SQLHelper {
     // variable for connection with database
     private Connection connection = null;
 
+    /**
+     * Class constructor
+     * @param dbaseURL database URL
+     * @param username database username
+     * @param password database password
+     */
     SQLHelper(String dbaseURL, String username, String password){
         getConnection(dbaseURL, username, password);
     }
 
-    // connect to database
+    /**
+     * Connect to database
+     * @param dbaseURL database URL
+     * @param username database username
+     * @param password database password
+     */
     private void getConnection(String dbaseURL, String username, String password){
         try {
             connection = DriverManager.getConnection(dbaseURL, username, password);
@@ -31,7 +44,9 @@ public class SQLHelper {
         }
     }
 
-    // get table of hotel records
+    /**
+     * Get table of hotel records
+     */
     protected HotelRecord[] getHotels(){
         List<HotelRecord> table = new ArrayList<>();
         try {
@@ -52,7 +67,9 @@ public class SQLHelper {
         return  table.toArray(new HotelRecord[0]);
     }
 
-    // get table of cities
+    /**
+     * Get table of cities
+     */
     protected String[] getCities(){
         List<String> table = new ArrayList<>();
         try {
@@ -70,7 +87,10 @@ public class SQLHelper {
         return  table.toArray(new String[0]);
     }
 
-    // get table of rooms records
+    /**
+     * Get table of rooms records
+     * @param hotel_id hotel ID
+     */
     protected RoomRecord[] getRooms(int hotel_id){
         List<RoomRecord> table = new ArrayList<>();
         try {
@@ -96,7 +116,9 @@ public class SQLHelper {
         return  table.toArray(new RoomRecord[0]);
     }
 
-    // get table of room categories records
+    /**
+     * Get table of room categories records
+     */
     protected RoomCategoryRecord[] getRoomCat(){
         List<RoomCategoryRecord> table = new ArrayList<>();
         try {
@@ -115,7 +137,10 @@ public class SQLHelper {
         return  table.toArray(new RoomCategoryRecord[0]);
     }
 
-    // get name of the category of the room with the given id
+    /**
+     * Get name of the category of the room with the given id
+     * @param room_id room ID
+     */
     protected String getRoomCatName(int room_id){
         String temp = "";
         try {
@@ -134,7 +159,10 @@ public class SQLHelper {
         return  temp;
     }
 
-    // get name of the city of the hotel with the given id
+    /**
+     * Get name of the city of the hotel with the given id
+     * @param hotel_id hotel ID
+     */
     protected String getCityName(int hotel_id){
         String temp = "";
         try {
@@ -153,7 +181,10 @@ public class SQLHelper {
         return  temp;
     }
 
-    // get price of the room category
+    /**
+     * Get price of the room category
+     * @param cat_id room category ID
+     */
     protected Integer getCatPrice(int cat_id){
         try {
             PreparedStatement pst = connection.prepareStatement("SELECT podstawa_cenowa FROM projekt.kategorie_pokoi kp where kp.kategoria_id = ?", ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
@@ -171,8 +202,14 @@ public class SQLHelper {
         return  null;
     }
 
-    // get all rooms available for given conditions
-    // calls plpgsql function
+    /**
+     * Get all rooms available for given conditions, calls plpgsql function
+     * @param miasto city name
+     * @param poczatek start date
+     * @param koniec end date
+     * @param kategoriaID room category ID
+     * @param iloscOsob number of guests
+     */
     protected RoomRecord[] getFreeRooms(String miasto, LocalDate poczatek, LocalDate koniec, int kategoriaID, int iloscOsob){
         List<RoomRecord> table = new ArrayList<>();
         try {
@@ -208,6 +245,10 @@ public class SQLHelper {
         return  table.toArray(new RoomRecord[0]);
     }
 
+    /**
+     * Get all reservations done for specific room
+     * @param room_id room ID
+     */
     protected List<LocalDate[]> getAllReservations(int room_id){
         List<LocalDate[]> table = new ArrayList<>();
         try {
@@ -228,6 +269,11 @@ public class SQLHelper {
         return table;
     }
 
+    /**
+     * Check user credentials
+     * @param login users login
+     * @param password users password
+     */
     protected boolean[] checkUserCredentials(String login, char[] password){
         try {
             CallableStatement cst = connection.prepareCall("{call funkcje.autoryzuj(?, ?)}");
@@ -255,6 +301,16 @@ public class SQLHelper {
         return new boolean[]{false,false};
     }
 
+    /**
+     * Register new user
+     * @param login users login
+     * @param password users password
+     * @param mail users email
+     * @param fname users first name
+     * @param lname users last name
+     * @param pesel users PESEL
+     * @param phone users phone number
+     */
     protected int registerUser(String login, char[] password, String mail, String fname, String lname, String pesel, String phone){
         try {
             CallableStatement cst = connection.prepareCall("{call funkcje.dodaj_uzytkownika(?, ?, ?, ?, ?, ?, ?)}");
@@ -285,6 +341,10 @@ public class SQLHelper {
         return 3;
     }
 
+    /**
+     * Get user record by login
+     * @param login users login
+     */
     protected GuestRecord getGuest(String login){
         try {
             PreparedStatement pst = connection.prepareStatement("select * from projekt.goscie r where login = ?", ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
@@ -309,6 +369,14 @@ public class SQLHelper {
         return null;
     }
 
+    /**
+     * Make reservation
+     * @param roomID room ID
+     * @param guestID guest ID
+     * @param start start date
+     * @param end end date
+     * @param numOfGuests number of guests
+     */
     protected boolean makeReservation(int roomID,int guestID, LocalDate start, LocalDate end, int numOfGuests){
         try {
             CallableStatement cst = connection.prepareCall("{call funkcje.dodaj_rezerwacje(?, ?, ?, ?, ?)}");
@@ -334,6 +402,10 @@ public class SQLHelper {
         return false;
     }
 
+    /**
+     * Get array of reservations for specific user
+     * @param userId user ID
+     */
     protected Object[][] getTableReservationsContent(int userId){
         List<Object[]> table = new ArrayList<>();
         try {
@@ -370,6 +442,9 @@ public class SQLHelper {
         return returnArray;
     }
 
+    /**
+     * Get array of reservations of all users
+     */
     protected Object[][] getTableReservationsContent(){
         List<Object[]> table = new ArrayList<>();
         try {
@@ -405,6 +480,10 @@ public class SQLHelper {
         return returnArray;
     }
 
+    /**
+     * Get array of bills of specific user
+     * @param userId user ID
+     */
     protected Object[][] getTableBillsContent(int userId){
         List<Object[]> table = new ArrayList<>();
         try {
@@ -439,6 +518,9 @@ public class SQLHelper {
         return returnArray;
     }
 
+    /**
+     * Get array of bills of all users
+     */
     protected Object[][] getTableBillsContent(){
         List<Object[]> table = new ArrayList<>();
         try {
@@ -472,6 +554,9 @@ public class SQLHelper {
         return returnArray;
     }
 
+    /**
+     * Get array of best clients
+     */
     protected Object[][] getTableBestClientsContent(){
         List<Object[]> table = new ArrayList<>();
         try {
@@ -502,6 +587,9 @@ public class SQLHelper {
         return returnArray;
     }
 
+    /**
+     * Reset database to factory settings
+     */
     protected void resetDB(){
         ScriptRunner scriptRunner = new ScriptRunner(connection);
         scriptRunner.setSendFullScript(false);

@@ -204,7 +204,7 @@ FOR EACH ROW EXECUTE PROCEDURE funkcje.dodaj_rachunek();
  
 --  Funkcja sprawdzajaca czy poczatek pobytu jest przed koncem. 
 --  Funckja zastosowana jest do sprawdzania wartosci wprowadzanych do tabli projekt.rezerwacje (pierwsza linijka kodu w pliku add_data.sql)
-create function funkcje.sprawdz_czy_daty_w_dobrej_kolejnosci(start date, koniec date)
+CREATE OR REPLACE FUNCTION funkcje.sprawdz_czy_daty_w_dobrej_kolejnosci(start date, koniec date)
   returns boolean
 as
 $$

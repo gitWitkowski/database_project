@@ -12,7 +12,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
 
-// class representing search panel
+/**
+ * Class representing search panel
+ */
 public class SearchPanel extends JPanel {
 
     // SQLHelper class responsible for interaction with database
@@ -47,6 +49,10 @@ public class SearchPanel extends JPanel {
 
     // action listener for btnSearch
     private ActionListener btnSearchListener = new ActionListener() {
+        /**
+         * Searches for available rooms with given conditions
+         * @param e the event to be processed
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
             start = startDate.getDate();
@@ -75,14 +81,18 @@ public class SearchPanel extends JPanel {
     *  experimental
     */
     private DateChangeListener dtchng = new DateChangeListener() {
+        /**
+         * Updates DatePicker veto policy
+         * @param dateChangeEvent
+         */
         @Override
         public void dateChanged(DateChangeEvent dateChangeEvent) {
             updateVetoPolicy();
         }
     };
 
-    /*
-     *  experimental
+    /**
+     * DatePicker veto policy
      */
     private void updateVetoPolicy(){
         datePickerSettings2.setVetoPolicy(new DateVetoPolicy() {
@@ -97,13 +107,20 @@ public class SearchPanel extends JPanel {
         });
     }
 
+    /**
+     * Class constructor
+     * @param sql SQLHelper reference
+     * @param mainFrame MainFrame reference
+     */
     SearchPanel(SQLHelper sql, MainFrame mainFrame){
         this.sql = sql;
         this.mainFrame = mainFrame;
         initGUI();
     }
 
-    // init GUI for the search panel
+    /**
+     * Creates GUI for the search panel
+     */
     private void initGUI(){
         cityList = new JComboBox(sql.getCities());
         roomCatList = new JComboBox(sql.getRoomCat());
@@ -121,6 +138,11 @@ public class SearchPanel extends JPanel {
         startDate.addDateChangeListener(dtchng);
 
         datePickerSettings.setVetoPolicy(new DateVetoPolicy() {
+            /**
+             * Allow only future dates
+             * @param localDate date from calendar
+             * @return
+             */
             @Override
             public boolean isDateAllowed(LocalDate localDate) {
                 if(localDate.isBefore(LocalDate.now()))

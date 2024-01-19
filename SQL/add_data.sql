@@ -28,9 +28,17 @@ join projekt.kategorie_pokoi kp on p.kategoria_id =kp.kategoria_id
 join projekt.goscie g on g.gosc_id = r.gosc_id 
 group by g.imie, g.nazwisko having count(r.rezerwacja_id) > 3 and sum(r2.suma_kosztow) > 2000;
 
+
+-- dodajemy trigger ktory dodaje rachunek na konto uzytkownika po kazdej dokonanej rezerwacji
 drop  TRIGGER if exists rachunek ON projekt.rezerwacje;
 CREATE TRIGGER rachunek after insert ON projekt.rezerwacje 
 FOR EACH ROW EXECUTE PROCEDURE funkcje.dodaj_rachunek();
+
+drop  TRIGGER if exists rejstracja_walidacja ON projekt.uzytkownicy;
+-- tworzymy trigger powiazany z tabela uzytkownicy
+CREATE TRIGGER rejstracja_walidacja 
+    AFTER INSERT OR UPDATE  ON projekt.uzytkownicy
+    FOR EACH ROW EXECUTE PROCEDURE funkcje.walidacja(); 
 
 
 -- DODANIE PRZYKLADOWYCH DANYCH DO BAZDY

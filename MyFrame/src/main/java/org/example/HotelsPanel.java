@@ -5,7 +5,9 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-// panel displaying all hotels from database
+/**
+ * Panel displaying all hotels from database
+ */
 public class HotelsPanel extends JPanel {
 
     // SQLHelper class responsible for interaction with database
@@ -17,13 +19,20 @@ public class HotelsPanel extends JPanel {
     private JPanel contentPanel = new JPanel();
     private JScrollPane scrollPane = new JScrollPane(contentPanel);
 
+    /**
+     * Class constructor
+     * @param sql SQLHELPER reference
+     * @param mainFrame MainFrame reference
+     */
     HotelsPanel(SQLHelper sql, MainFrame mainFrame){
         this.sql = sql;
         this.mainFrame = mainFrame;
         initGUI();
     }
 
-    // inner class representing single hotel cell on the displayed list
+    /**
+     * Inner class representing single hotel cell on the displayed list
+     */
     private class HotelCell extends JPanel implements MouseListener {
 
         // hotel record
@@ -36,6 +45,10 @@ public class HotelsPanel extends JPanel {
         protected JLabel address;
         protected JPanel box = new JPanel();
 
+        /**
+         * Inner class constructor
+         * @param hotelRecord record for particular hotel
+         */
         HotelCell(HotelRecord hotelRecord) {
             this.hotelRecord = hotelRecord;
             this.hotelName = new JLabel(hotelRecord.name());
@@ -45,7 +58,9 @@ public class HotelsPanel extends JPanel {
             this.initCellGUI();
         }
 
-        // create single cell
+        /**
+         * Creates GUI for single cell
+         */
         void initCellGUI(){
             this.add(box);
             box.setLayout(new BoxLayout(box, BoxLayout.Y_AXIS));
@@ -59,7 +74,10 @@ public class HotelsPanel extends JPanel {
             this.addMouseListener(this);
         }
 
-        // clicking on a cell results in opening panel with rooms from a given hotel
+        /**
+         * Clicking on a cell results in opening panel with rooms from a given hotel
+         * @param e the event to be processed
+         */
         @Override
         public void mouseClicked(MouseEvent e) {
             mainFrame.changePanel(new RoomsPanel(sql, mainFrame, hotelRecord.hotel_id()));
@@ -68,11 +86,20 @@ public class HotelsPanel extends JPanel {
         public void mousePressed(MouseEvent e) {}
         @Override
         public void mouseReleased(MouseEvent e) {}
+
+        /**
+         * Changes background color of the hotel cell
+         * @param e the event to be processed
+         */
         @Override
         public void mouseEntered(MouseEvent e) {
             this.setBackground(Color.decode("#2E8695"));
             box.setBackground(Color.decode("#2E8695"));
         }
+        /**
+         * Changes background color of the hotel cell
+         * @param e the event to be processed
+         */
         @Override
         public void mouseExited(MouseEvent e) {
             this.setBackground(Color.decode("#417680"));
@@ -80,7 +107,9 @@ public class HotelsPanel extends JPanel {
         }
     }
 
-    // create GUI
+    /**
+     * Creates GUI for hotels panel
+     */
     private void initGUI(){
         this.setLayout(new BorderLayout());
         contentPanel.setLayout(new BoxLayout(contentPanel,BoxLayout.Y_AXIS));

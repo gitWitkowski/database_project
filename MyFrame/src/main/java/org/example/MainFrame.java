@@ -6,7 +6,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
 
-// main Frame of the App
+/**
+ * Main Frame of the App
+ */
 public class MainFrame extends JFrame {
 
     // SQLHelper class responsible for interaction with database
@@ -20,10 +22,17 @@ public class MainFrame extends JFrame {
 
     private GuestRecord currentUser;
 
+    /**
+     * Updates current user
+     * @param gr current user to be set
+     */
     protected void setCurrentUser(GuestRecord gr){
         this.currentUser = gr;
     }
 
+    /**
+     * Getter for curent user
+     */
     protected GuestRecord getCurrentUser(){
         return currentUser;
     }
@@ -44,6 +53,10 @@ public class MainFrame extends JFrame {
 
     // event handlers for buttons
     private ActionListener loginBtnListener = new ActionListener() {
+        /**
+         * Renders login panel
+         * @param e the event to be processed
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
             System.out.println("login button");
@@ -52,6 +65,10 @@ public class MainFrame extends JFrame {
     };
 
     private ActionListener registerBtnListener = new ActionListener() {
+        /**
+         * Renders register panel
+         * @param e the event to be processed
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
             System.out.println("register button");
@@ -60,6 +77,10 @@ public class MainFrame extends JFrame {
     };
 
     private ActionListener logoutBtnListener = new ActionListener() {
+        /**
+         * Logouts current user
+         * @param e the event to be processed
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
             logoutUser();
@@ -71,6 +92,10 @@ public class MainFrame extends JFrame {
     };
 
     private ActionListener searchBtnListener = new ActionListener() {
+        /**
+         * Renders search panel
+         * @param e the event to be processed
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
             System.out.println("search button");
@@ -79,6 +104,10 @@ public class MainFrame extends JFrame {
     };
 
     private ActionListener viewBtnListener = new ActionListener() {
+        /**
+         * Renders hotels panel
+         * @param e the event to be processed
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
             System.out.println("offers button");
@@ -87,6 +116,10 @@ public class MainFrame extends JFrame {
     };
 
     private ActionListener userPanelBtnListener = new ActionListener() {
+        /**
+         * Renders user panel
+         * @param e the event to be processed
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
             if(isSuperUser)
@@ -97,6 +130,10 @@ public class MainFrame extends JFrame {
     };
 
     private ActionListener resetBtnListener = new ActionListener() {
+        /**
+         * Resets database
+         * @param e the event to be processed
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
             System.out.println("RESET");
@@ -104,6 +141,10 @@ public class MainFrame extends JFrame {
         }
     };
 
+    /**
+     * Changes content of the content panel
+     * @param panel panel to be rendered in content panel
+     */
     protected void changePanel(JPanel panel){
         contentPanel.removeAll();
         contentPanel.add(panel, BorderLayout.CENTER);
@@ -111,6 +152,9 @@ public class MainFrame extends JFrame {
         contentPanel.validate();
     }
 
+    /**
+     * Class constructor
+     */
     MainFrame(){
         sql = new SQLHelper(
                 "jdbc:postgresql://trumpet.db.elephantsql.com/cipfxjrs",
@@ -120,7 +164,9 @@ public class MainFrame extends JFrame {
         setUpActionListeners();
     }
 
-    // create starting GUI
+    /**
+     * Creates starting GUI
+     */
     private void initGUI(){
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setMinimumSize(new Dimension(800, 600));
@@ -163,6 +209,9 @@ public class MainFrame extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Sets all action listeners
+     */
     private void setUpActionListeners(){
         loginBtn.addActionListener(loginBtnListener);
         registerBtn.addActionListener(registerBtnListener);
@@ -173,6 +222,9 @@ public class MainFrame extends JFrame {
         resetBtn.addActionListener(resetBtnListener);
     }
 
+    /**
+     * Logs out current user
+     */
     private void logoutUser(){
         if(getIsLogged()){
             loginBtn.setVisible(true);
@@ -184,6 +236,9 @@ public class MainFrame extends JFrame {
         }
     }
 
+    /**
+     * Logs in new user
+     */
     protected void loginUser(){
         if(!getIsLogged()){
             loginBtn.setVisible(false);
@@ -194,18 +249,32 @@ public class MainFrame extends JFrame {
         }
     }
 
+    /**
+     * Check if user is logged
+     */
     protected boolean getIsLogged(){
         return isLogged;
     }
 
+    /**
+     * Setter for isLogged
+     * @param val sets whether user is logged
+     */
     protected void setLogged(boolean val){
         isLogged = val;
     }
 
+    /**
+     * Checks if logged user is super user
+     */
     protected boolean getIsSuperUser(){
         return isSuperUser;
     }
 
+    /**
+     * Setter for super user
+     * @param val sets whether user is superuser
+     */
     protected void setSuperUser(boolean val){
         isSuperUser = val;
     }

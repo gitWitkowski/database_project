@@ -3,6 +3,9 @@ package org.example;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * Class representing user panel
+ */
 public class UserPanel extends JPanel {
 
     // SQLHelper class responsible for interaction with database
@@ -15,6 +18,12 @@ public class UserPanel extends JPanel {
     private JTable billsTable;
     private JTable bestClientsTable;
 
+    /**
+     * Class constructor
+     * @param sql SQLHelper reference
+     * @param mainFrame MainFrame reference
+     * @param login user login
+     */
     UserPanel(SQLHelper sql, MainFrame mainFrame, String login){
         this.sql =  sql;
         this.mainFrame = mainFrame;
@@ -22,6 +31,9 @@ public class UserPanel extends JPanel {
         initGUI();
     }
 
+    /**
+     * Creates GUI
+     */
     private void initGUI(){
         setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
         JLabel helloLabel = new JLabel("Witaj, " + (mainFrame.getIsSuperUser() ? "ADMIN" : guest));

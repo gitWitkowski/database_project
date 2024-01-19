@@ -12,6 +12,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Class representing room offer panel
+ */
 public class RoomOfferPanel extends JPanel {
 
     // SQLHelper class responsible for interaction with database
@@ -41,6 +44,10 @@ public class RoomOfferPanel extends JPanel {
     private JButton makeReservationBtn = new JButton("DOKONAJ REZERWACJI");
 
     private ActionListener makeReservationListener = new ActionListener() {
+        /**
+         * Makes reservation with set parameters
+         * @param e the event to be processed
+         */
         @Override
         public void actionPerformed(ActionEvent e) {
             // to do
@@ -72,6 +79,15 @@ public class RoomOfferPanel extends JPanel {
         initGUI();
     }
 
+    /**
+     * Class constructor
+     * @param sql SQLHelper reference
+     * @param mainFrame MainFrame reference
+     * @param room_id room ID
+     * @param start star date
+     * @param end end date
+     * @param numOfGuests number of guests
+     */
     RoomOfferPanel(SQLHelper sql, MainFrame mainFrame, int room_id, LocalDate start, LocalDate end, int numOfGuests){
         this.sql = sql;
         this.mainFrame = mainFrame;
@@ -84,6 +100,9 @@ public class RoomOfferPanel extends JPanel {
         initGUI();
     }
 
+    /**
+     * Create GUI
+     */
     private void initGUI(){
         this.add(startDateLabel);
         this.add(startDate);
@@ -100,6 +119,9 @@ public class RoomOfferPanel extends JPanel {
         disableReservedDateRanges();
     }
 
+    /**
+     * Disable all dates in DatePicker for which reservations have been already made
+     */
     private void disableReservedDateRanges(){
         DateVetoPolicy alreadyReservedPolicy = new DateVetoPolicy() {
             List<LocalDate[]> alreadyReservedDates =  sql.getAllReservations(roomId);

@@ -6,6 +6,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.time.LocalDate;
 
+/**
+ * Class representing rooms panel
+ */
 public class RoomsPanel extends JPanel {
 
     // SQLHelper class responsible for interaction with database
@@ -23,14 +26,27 @@ public class RoomsPanel extends JPanel {
     private LocalDate end = null;
     private int numOfGuests;
 
-    // constructor when displaying all the rooms in a certain hotel
+    /**
+     * Constructor when displaying all the rooms in a certain hotel
+     * @param sql SQLHelper reference
+     * @param mainFrame MainFrame reference
+     * @param id room ID
+     */
     RoomsPanel(SQLHelper sql, MainFrame mainFrame, int id){
         this.sql = sql;
         this.mainFrame = mainFrame;
         initGUI(sql.getRooms(id));
     }
 
-    // constructor when displaying only available rooms
+    /**
+     * Constructor when displaying only available rooms
+     * @param sql SQLHelper reference
+     * @param mainFrame MainFrame reference
+     * @param tab array of all available room records
+     * @param start start date
+     * @param end end date
+     * @param numOfGuests requested number of guests
+     */
     RoomsPanel(SQLHelper sql, MainFrame mainFrame, RoomRecord[] tab, LocalDate start, LocalDate end, int numOfGuests){
         this.sql = sql;
         this.mainFrame = mainFrame;
@@ -40,7 +56,9 @@ public class RoomsPanel extends JPanel {
         initGUI(tab);
     }
 
-    // inner class representing single hotel cell on the displayed list
+    /**
+     * Inner class representing single hotel cell on the displayed list
+     */
     private class RoomCell extends JPanel implements MouseListener {
 
         // room record
@@ -54,6 +72,10 @@ public class RoomsPanel extends JPanel {
         protected JLabel price;
         protected JPanel box = new JPanel();
 
+        /**
+         * Class constructor
+         * @param roomRecord room record
+         */
         RoomCell(RoomRecord roomRecord) {
             this.roomRecord = roomRecord;
             this.roomCat = new JLabel(sql.getRoomCatName(roomRecord.room_id()));
@@ -64,7 +86,9 @@ public class RoomsPanel extends JPanel {
             this.initCellGUI();
         }
 
-        // create single cell
+        /**
+         * Create single cell
+         */
         void initCellGUI(){
             this.add(box);
             box.setLayout(new BoxLayout(box, BoxLayout.Y_AXIS));
@@ -79,6 +103,10 @@ public class RoomsPanel extends JPanel {
             this.addMouseListener(this);
         }
 
+        /**
+         * Changes content of content panel to the room offer panel
+         * @param e the event to be processed
+         */
         @Override
         public void mouseClicked(MouseEvent e) {
             mainFrame.changePanel(new RoomOfferPanel(sql, mainFrame, roomRecord.room_id(), start, end, numOfGuests));
@@ -87,11 +115,20 @@ public class RoomsPanel extends JPanel {
         public void mousePressed(MouseEvent e) {}
         @Override
         public void mouseReleased(MouseEvent e) {}
+
+        /**
+         * Changes background color
+         * @param e the event to be processed
+         */
         @Override
         public void mouseEntered(MouseEvent e) {
             this.setBackground(Color.decode("#2E8695"));
             box.setBackground(Color.decode("#2E8695"));
         }
+        /**
+         * Changes background color
+         * @param e the event to be processed
+         */
         @Override
         public void mouseExited(MouseEvent e) {
             this.setBackground(Color.decode("#417680"));
@@ -99,7 +136,10 @@ public class RoomsPanel extends JPanel {
         }
     }
 
-    // create GUI
+    /**
+     * Create GUI
+     * @param table all requested rooms
+     */
     private void initGUI(RoomRecord[] table){
         this.setLayout(new BorderLayout());
         contentPanel.setLayout(new BoxLayout(contentPanel,BoxLayout.Y_AXIS));
