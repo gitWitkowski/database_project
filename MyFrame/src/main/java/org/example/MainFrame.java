@@ -157,6 +157,8 @@ public class MainFrame extends JFrame {
         add(titlePanel, BorderLayout.NORTH);
         add(contentPanel);
 
+        changePanel(new LoginPanel(sql, this));
+
         setVisible(true);
     }
 

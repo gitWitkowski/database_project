@@ -48,13 +48,17 @@ public class RoomOfferPanel extends JPanel {
             if(mainFrame.getIsLogged()){
                 System.out.println(roomId);
                 System.out.println(mainFrame.getCurrentUser().guestId());
-                boolean addedRecord = sql.makeReservation(roomId, mainFrame.getCurrentUser().guestId(), startDate.getDate(),
-                        endDate.getDate(), (Integer) numOfGuestSpinner.getValue());
-                if(addedRecord){
-                    JOptionPane.showMessageDialog(null, "Dokonano rezerwacji", "Uwaga", JOptionPane.INFORMATION_MESSAGE);
-                    mainFrame.changePanel(new UserPanel(sql, mainFrame, mainFrame.getCurrentUser().login()));
-                }else
-                    JOptionPane.showMessageDialog(null, "Rezerwacja nie powiodla sie", "Uwaga", JOptionPane.INFORMATION_MESSAGE);
+                if(startDate.getDate() != null && endDate.getDate() != null) {
+                    boolean addedRecord = sql.makeReservation(roomId, mainFrame.getCurrentUser().guestId(), startDate.getDate(),
+                            endDate.getDate(), (Integer) numOfGuestSpinner.getValue());
+                    if(addedRecord){
+                        JOptionPane.showMessageDialog(null, "Dokonano rezerwacji", "Uwaga", JOptionPane.INFORMATION_MESSAGE);
+                        mainFrame.changePanel(new UserPanel(sql, mainFrame, mainFrame.getCurrentUser().login()));
+                    }else
+                        JOptionPane.showMessageDialog(null, "Rezerwacja nie powiodla sie", "Uwaga", JOptionPane.INFORMATION_MESSAGE);
+                }else{
+                    JOptionPane.showMessageDialog(null, "Data nie może być pusta", "Uwaga", JOptionPane.INFORMATION_MESSAGE);
+                }
             }else{
                 JOptionPane.showMessageDialog(null, "Aby dokonac rezerwacji, zaloguj sie lub zarejestruj", "Uwaga", JOptionPane.INFORMATION_MESSAGE);
             }

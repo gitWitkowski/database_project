@@ -83,7 +83,7 @@ public class SQLHelper {
                         rs.getInt("hotel_id"),
                         rs.getInt("kategoria_id"),
                         rs.getInt("max_gosci"),
-                        rs.getBoolean("obecnie_zajety")
+                        rs.getString("nazwa")
                 );
                 table.add(temp);
             }
@@ -134,6 +134,43 @@ public class SQLHelper {
         return  temp;
     }
 
+    // get name of the city of the hotel with the given id
+    protected String getCityName(int hotel_id){
+        String temp = "";
+        try {
+            PreparedStatement pst = connection.prepareStatement("SELECT miasto FROM projekt.hotele h where h.hotel_id = ?", ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            pst.setInt(1,hotel_id);
+            ResultSet rs = pst.executeQuery();
+            while (rs.next())  {
+                temp = rs.getString("miasto");
+            }
+            rs.close();
+            pst.close();    }
+        catch(SQLException e)  {
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+            JOptionPane.showMessageDialog(null, e.getMessage(), "BLAD", JOptionPane.ERROR_MESSAGE);
+        }
+        return  temp;
+    }
+
+    // get price of the room category
+    protected Integer getCatPrice(int cat_id){
+        try {
+            PreparedStatement pst = connection.prepareStatement("SELECT podstawa_cenowa FROM projekt.kategorie_pokoi kp where kp.kategoria_id = ?", ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            pst.setInt(1,cat_id);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next())  {
+                return rs.getInt("podstawa_cenowa");
+            }
+            rs.close();
+            pst.close();    }
+        catch(SQLException e)  {
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+            JOptionPane.showMessageDialog(null, e.getMessage(), "BLAD", JOptionPane.ERROR_MESSAGE);
+        }
+        return  null;
+    }
+
     // get all rooms available for given conditions
     // calls plpgsql function
     protected RoomRecord[] getFreeRooms(String miasto, LocalDate poczatek, LocalDate koniec, int kategoriaID, int iloscOsob){
@@ -156,7 +193,7 @@ public class SQLHelper {
                         rs.getInt("hotelID"),
                         rs.getInt("kategoria_id"),
                         rs.getInt("max_gosci"),
-                        false
+                        rs.getString("nazwa")
                 );
                 table.add(temp);
             }
@@ -306,6 +343,7 @@ public class SQLHelper {
             while (rs.next())  {
                 table.add(new Object[]{
                         rs.getString("numer_wiersza"),
+                        rs.getString("gosc_id"),
                         rs.getString("rezerwacja_id"),
                         rs.getString("nazwa_kategorii"),
                         rs.getString("nazwa"),
@@ -324,8 +362,8 @@ public class SQLHelper {
 
         Object[][] returnArray = new Object[table.size()][];
         for(int i=0; i<table.size(); i++){
-            returnArray[i] = new Object[8];
-            for(int j=0; j<8; j++){
+            returnArray[i] = new Object[9];
+            for(int j=0; j<9; j++){
                 returnArray[i][j] = table.get(i)[j];
             }
         }
@@ -341,6 +379,7 @@ public class SQLHelper {
                 table.add(new Object[]{
                         rs.getString("numer_wiersza"),
                         rs.getString("rezerwacja_id"),
+                        rs.getString("gosc_id"),
                         rs.getString("nazwa_kategorii"),
                         rs.getString("nazwa"),
                         rs.getString("miasto"),
@@ -358,8 +397,8 @@ public class SQLHelper {
 
         Object[][] returnArray = new Object[table.size()][];
         for(int i=0; i<table.size(); i++){
-            returnArray[i] = new Object[8];
-            for(int j=0; j<8; j++){
+            returnArray[i] = new Object[9];
+            for(int j=0; j<9; j++){
                 returnArray[i][j] = table.get(i)[j];
             }
         }
@@ -375,6 +414,7 @@ public class SQLHelper {
             while (rs.next())  {
                 table.add(new Object[]{
                         rs.getString("rezerwacja_id"),
+                        rs.getString("gosc_id"),
                         rs.getString("nazwa"),
                         rs.getString("forma_platnosci"),
                         String.valueOf(rs.getString("suma_kosztow")),
@@ -391,8 +431,8 @@ public class SQLHelper {
 
         Object[][] returnArray = new Object[table.size()][];
         for(int i=0; i<table.size(); i++){
-            returnArray[i] = new Object[6];
-            for(int j=0; j<6; j++){
+            returnArray[i] = new Object[7];
+            for(int j=0; j<7; j++){
                 returnArray[i][j] = table.get(i)[j];
             }
         }
@@ -407,6 +447,7 @@ public class SQLHelper {
             while (rs.next())  {
                 table.add(new Object[]{
                         rs.getString("rezerwacja_id"),
+                        rs.getString("gosc_id"),
                         rs.getString("nazwa"),
                         rs.getString("forma_platnosci"),
                         String.valueOf(rs.getString("suma_kosztow")),
@@ -423,8 +464,38 @@ public class SQLHelper {
 
         Object[][] returnArray = new Object[table.size()][];
         for(int i=0; i<table.size(); i++){
-            returnArray[i] = new Object[6];
-            for(int j=0; j<6; j++){
+            returnArray[i] = new Object[7];
+            for(int j=0; j<7; j++){
+                returnArray[i][j] = table.get(i)[j];
+            }
+        }
+        return returnArray;
+    }
+
+    protected Object[][] getTableBestClientsContent(){
+        List<Object[]> table = new ArrayList<>();
+        try {
+            PreparedStatement pst = connection.prepareStatement("select * FROM projekt.stali_klienci", ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = pst.executeQuery();
+            while (rs.next())  {
+                table.add(new Object[]{
+                        rs.getString("imie"),
+                        rs.getString("nazwisko"),
+                        String.valueOf(rs.getString("suma_kosztow")),
+                        String.valueOf(rs.getString("ilosc_pobytow"))
+                });
+            }
+            rs.close();
+            pst.close();    }
+        catch(SQLException e)  {
+            System.out.println("Blad podczas przetwarzania danych:"+e);
+            JOptionPane.showMessageDialog(null, e.getMessage(), "BLAD", JOptionPane.ERROR_MESSAGE);
+        }
+
+        Object[][] returnArray = new Object[table.size()][];
+        for(int i=0; i<table.size(); i++){
+            returnArray[i] = new Object[4];
+            for(int j=0; j<4; j++){
                 returnArray[i][j] = table.get(i)[j];
             }
         }

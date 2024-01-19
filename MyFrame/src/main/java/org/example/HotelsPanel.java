@@ -33,21 +33,28 @@ public class HotelsPanel extends JPanel {
         protected JLabel hotelName;
         protected JLabel city;
         protected JLabel rating;
+        protected JLabel address;
+        protected JPanel box = new JPanel();
 
         HotelCell(HotelRecord hotelRecord) {
             this.hotelRecord = hotelRecord;
             this.hotelName = new JLabel(hotelRecord.name());
             this.city = new JLabel(hotelRecord.city());
             this.rating = new JLabel(""+ hotelRecord.rating());
+            this.address = new JLabel(hotelRecord.address());
             this.initCellGUI();
         }
 
         // create single cell
         void initCellGUI(){
-            this.add(hotelName);
-            this.add(city);
-            this.add(rating);
+            this.add(box);
+            box.setLayout(new BoxLayout(box, BoxLayout.Y_AXIS));
+            box.add(hotelName);
+            box.add(city);
+            box.add(address);
+//            this.add(rating);
             this.setBackground(Color.decode("#417680"));
+            box.setBackground(Color.decode("#417680"));
             this.setBorder(BorderFactory.createLineBorder(Color.black));
             this.addMouseListener(this);
         }
@@ -64,10 +71,12 @@ public class HotelsPanel extends JPanel {
         @Override
         public void mouseEntered(MouseEvent e) {
             this.setBackground(Color.decode("#2E8695"));
+            box.setBackground(Color.decode("#2E8695"));
         }
         @Override
         public void mouseExited(MouseEvent e) {
             this.setBackground(Color.decode("#417680"));
+            box.setBackground(Color.decode("#417680"));
         }
     }
 

@@ -13,6 +13,7 @@ public class UserPanel extends JPanel {
 
     private JTable reservationsTable;
     private JTable billsTable;
+    private JTable bestClientsTable;
 
     UserPanel(SQLHelper sql, MainFrame mainFrame, String login){
         this.sql =  sql;
@@ -31,6 +32,7 @@ public class UserPanel extends JPanel {
         String[] columnNamesReservations = {
                 "L.p.",
                 "ID rezerwacji",
+                "ID gościa",
                 "Kategoria pokoju",
                 "Nazwa hotelu",
                 "Miasto",
@@ -41,6 +43,7 @@ public class UserPanel extends JPanel {
 
         String[] columnNamesBills = {
                 "ID rezerwacji",
+                "ID gościa",
                 "Nazwa hotelu",
                 "Forma platnosci",
                 "Suma kosztow",
@@ -48,8 +51,16 @@ public class UserPanel extends JPanel {
                 "Liczba nocy"
         };
 
+        String[] columnNamesBestClients = {
+                "Imie",
+                "Nazwisko",
+                "Calkowita suma wydanych pieniedzy",
+                "Calkowita ilosc pobytow",
+        };
+
         Object[][] dataReservations;
         Object[][] dataBills;
+        Object[][] dataBestClients;
         if(mainFrame.getIsSuperUser()){
             dataReservations = sql.getTableReservationsContent();
             dataBills = sql.getTableBillsContent();
@@ -73,5 +84,16 @@ public class UserPanel extends JPanel {
         billsTable.setDefaultEditor(Object.class, null);
         billsTable.getTableHeader().setReorderingAllowed(false);
         this.add(new JScrollPane(billsTable));
+
+        if(mainFrame.getIsSuperUser()){
+            this.add(new JLabel("NAJLEPSI (co najmniej 4 pobyty i co najmniej wydane 2000zł) KLIENCI:"));
+            dataBestClients = sql.getTableBestClientsContent();
+            bestClientsTable = new JTable(dataBestClients, columnNamesBestClients);
+            bestClientsTable.setPreferredScrollableViewportSize(new Dimension(500, 70));
+            bestClientsTable.setFillsViewportHeight(true);
+            bestClientsTable.setDefaultEditor(Object.class, null);
+            bestClientsTable.getTableHeader().setReorderingAllowed(false);
+            this.add(new JScrollPane(bestClientsTable));
+        }
     }
 }

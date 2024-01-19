@@ -47,20 +47,33 @@ public class RoomsPanel extends JPanel {
         protected RoomRecord roomRecord;
 
         // necessary labels providing information
+        protected JLabel cityName;
         protected JLabel hotelName;
         protected JLabel roomCat;
         protected JLabel maxGuests;
+        protected JLabel price;
+        protected JPanel box = new JPanel();
 
         RoomCell(RoomRecord roomRecord) {
             this.roomRecord = roomRecord;
             this.roomCat = new JLabel(sql.getRoomCatName(roomRecord.room_id()));
+            this.maxGuests = new JLabel("Maksymalna ilość gości: " + String.valueOf(roomRecord.maxGuests()));
+            this.cityName = new JLabel(sql.getCityName(roomRecord.hotel_id()));
+            this.hotelName = new JLabel(roomRecord.name());
+            this.price = new JLabel("Cena za noc: " + sql.getCatPrice(roomRecord.cat_id()) + " zł");
             this.initCellGUI();
         }
 
         // create single cell
         void initCellGUI(){
-            this.add(this.roomCat);
-            this.setBackground(Color.blue);
+            this.add(box);
+            box.setLayout(new BoxLayout(box, BoxLayout.Y_AXIS));
+            box.add(this.cityName);
+            box.add(this.hotelName);
+            box.add(this.roomCat);
+            box.add(this.price);
+            box.add(this.maxGuests);
+            box.setBackground(Color.decode("#417680"));
             this.setBackground(Color.decode("#417680"));
             this.setBorder(BorderFactory.createLineBorder(Color.black));
             this.addMouseListener(this);
@@ -77,10 +90,12 @@ public class RoomsPanel extends JPanel {
         @Override
         public void mouseEntered(MouseEvent e) {
             this.setBackground(Color.decode("#2E8695"));
+            box.setBackground(Color.decode("#2E8695"));
         }
         @Override
         public void mouseExited(MouseEvent e) {
             this.setBackground(Color.decode("#417680"));
+            box.setBackground(Color.decode("#417680"));
         }
     }
 
